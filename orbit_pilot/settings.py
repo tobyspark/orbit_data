@@ -25,8 +25,10 @@ SECRET_KEY = 'qbc@!=8s*r$ggvvq)k=^7-4u$x_zb-^(ry6u2&6lzyy)b$^!@j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS = ['*'] # NOTE: Set to allow all hosts to enable access from iOS devices on network.
+else:
+    ALLOWED_HOSTS = []
 
 # Application definition
 
