@@ -5,7 +5,7 @@ from django.urls import reverse
 from .forms import ConsentForm, SurveyForm
 
 def info(request):
-    return HttpResponse("TODO: Participant info page, with link to consent.")
+    return render(request, 'pilot/participant_info.html')
 
 def consent(request):
     if request.method == 'POST':
@@ -16,7 +16,7 @@ def consent(request):
     else:
         form = ConsentForm()
     
-    return render(request, 'pilot/orbit_base.html', {'form': form})
+    return render(request, 'pilot/survey.html', {'form': form})
 
 def survey(request, token):
     if request.method == 'POST':
@@ -27,7 +27,7 @@ def survey(request, token):
     else:
         form = SurveyForm()
     
-    return render(request, 'pilot/orbit_base.html', {'form': form})
+    return render(request, 'pilot/survey.html', {'form': form})
 
 def survey_done(request):
-    return HttpResponse("TODO: Survey done page")
+    return render(request, 'pilot/survey_done.html')
