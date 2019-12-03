@@ -1,12 +1,40 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from form_utils.forms import BetterForm
 
 def validate_age(value):
     if value < 20: raise ValidationError('Age too young')
     if value > 100: raise ValidationError('Age too old')
     if value % 5 != 0: raise ValidationError('Age not rounded to nearest five-years')
 
-class ConsentForm(forms.Form):
+class ConsentForm(BetterForm):
+    class Meta:
+        fieldsets = [
+            ('Email Address', {
+                'fields': [
+                    'email',
+                    ]}),
+            ('Consent', {
+                'fields': [
+                    'consent1',
+                    'consent2',
+                    'consent3',
+                    'consent4',
+                    'consent5',
+                    'consent6',
+                    'consent7',
+                    ]}),
+            ('Publishing', {
+                'fields': [
+                    'publishing1',
+                    'publishing2',
+                    ]}),
+            ('Signed', {
+                'fields': [
+                    'name',
+                    ]}),
+            ]
+                                   
     email = forms.EmailField(
         label='',
         widget=forms.TextInput(attrs={
@@ -48,9 +76,66 @@ class ConsentForm(forms.Form):
             }),
     )
 
-class SurveyForm(forms.Form):
+class SurveyForm(BetterForm):
+    class Meta:
+        fieldsets = [
+            ('Age', {
+                'fields': [
+                    'age',
+                    ]}),
+            ('Gender', {
+                'fields': [
+                    'genderChoice',
+                    'genderIdentify',
+                    ]}),
+            ('Vision', {
+                'fields': [
+                    'vision_light_perception',
+                    'vision_full_fov',
+                    'vision_reduced_fov',
+                    'vision_1to3',
+                    'vision_3to6',
+                    'vision_6tox',
+                    'vision_more',
+                    ]}),
+            ('Accessibility', {
+                'description': 'Do you use any iOS accessibility features?',
+                'fields': [
+                    'accessibility_voiceover',
+                    'accessibility_zoom',
+                    'accessibility_magnifier',
+                    'accessibility_displayaccomodations',
+                    'accessibility_speech',
+                    'accessibility_largetext',
+                    'accessibility_boldtext',
+                    'accessibility_buttonshapes',
+                    'accessibility_reducetransparency',
+                    'accessibility_increasecontrast',
+                    'accessibility_reducemotion',
+                    'accessibility_siri',
+                    'accessibility_braille',
+                    'accessibility_more',
+                    ]}),
+            ('Apps', {
+                'description': 'Do you use any of these apps? We are interested in apps that help you ‘see’ your surroundings in some way.',
+                'fields': [
+                    'apps_taptapsee',
+                    'apps_bemyeyes',
+                    'apps_seeingai',
+                    'apps_envision',
+                    'apps_more',
+                    ]}),
+            ('Camera', {
+                'description': 'Do you use the camera app on your iPhone?',
+                'fields': [
+                    'camera_usage',
+                    'camera_photos',
+                    'camera_videos',
+                    ]}),
+            ]
+                
     age = forms.IntegerField(
-        label='Age',
+        label='',
         validators=[validate_age],
         widget=forms.NumberInput(attrs={
             'step': '5',
@@ -59,8 +144,17 @@ class SurveyForm(forms.Form):
             'placeholder': '20, 25, 30, ...',
             }),
         )
-    gender = forms.CharField(
-        label='Gender',
+    genderChoice = forms.ChoiceField(
+        label='',
+        choices=[
+            ('M', 'Male'),
+            ('F', 'Female'),
+            ('O', 'Other'),
+            ],
+        widget=forms.RadioSelect,
+        )
+    genderIdentify = forms.CharField(
+        label='',
         min_length=1,
         max_length=128,
         widget=forms.TextInput(attrs={
