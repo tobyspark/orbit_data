@@ -1,22 +1,26 @@
+<!doctype html>
 <html>
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>ORBIT – {% block title %}Project Name{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/orbit.css">
 </head>
 
 <body>
-    <header>
-        <h1>The Study</h1>
-        <h2>Project Name</h1>
-        <ul>
-            <li>Principal investigator: ***REMOVED***</li>
-            <li>REC reference number: ***REMOVED***</li>
-            <li>***REMOVED***</li>
-        </ul>
-        
-        {% block header %}{% endblock %}
-    </header>
+    <section>
+        <header>The Study</header>
+        <section>
+            <h2>Project Name</h1>
+            <p>Principal investigator: ***REMOVED***<br>
+               REC reference number: ***REMOVED***<br>
+               ***REMOVED***</p>
+        </section>
+    </section>
     {% block sections %}{% endblock %}
 </body>
 </html>
