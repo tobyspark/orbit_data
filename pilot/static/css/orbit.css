@@ -53,6 +53,11 @@ section section > *:first-child {
     margin-top: 0;
 }
 
+/* form */ ul {
+    list-style-type: none;
+    padding-inline-start: unset;
+}
+
 @media screen and (max-width: 600px) {
     section header, section section {
         width: 100%;
