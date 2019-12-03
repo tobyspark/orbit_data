@@ -1,12 +1,38 @@
 {% extends "pilot/base.html" %}
 {% block title %}Participant Information{% endblock %}
-{% block header %}
-    <h2>Background Survey</h2>
-    <p>When explaining our study results, we will need to summarise our participant group, such as age range and visual impairments. Plus, knowing a bit more about your use of your iPhone will inform our thinking – and allow us to make best use of our time visiting you.</p>
-    <p>We ask you to complete the following background questionnaire.</p>
-{% endblock %}
 {% block sections %}
     <section>
-        {{ form }}
+        <header>This page</header>
+        <section>
+            <h1>Background Survey</h1>
+            <p>When explaining our study results, we will need to summarise our participant group, such as age range and visual impairments. Plus, knowing a bit more about your use of your iPhone will inform our thinking – and allow us to make best use of our time visiting you.</p>
+            <p>We ask you to complete the following background questionnaire.</p>
+        </section>
+    </section>
+    <section>
+        {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+        {% for fieldset in form.fieldsets %}
+          <fieldset class="{{ fieldset.classes }}">
+          {% if fieldset.legend %}
+            <legend>{{ fieldset.legend }}</legend>
+          {% endif %}
+          {% if fieldset.description %}
+            <p class="description">{{ fieldset.description }}</p>
+          {% endif %}
+          <ul>
+          {% for field in fieldset %}
+            {% if field.is_hidden %}
+              {{ field }}
+            {% else %}
+              <li{{ field.row_attrs }}>
+                {{ field.errors }}
+                {{ field.label_tag }}
+                {{ field }}
+              </li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+          </fieldset>
+        {% endfor %}
     </section>
 {% endblock %}
