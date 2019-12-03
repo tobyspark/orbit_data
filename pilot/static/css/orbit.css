@@ -1,0 +1,93 @@
+html {
+    font-family: sans-serif;
+    font-size: 1em;
+    line-height: 1.4em;
+}
+
+body {
+    padding-top: 2em;
+}
+
+h1, h2 {
+    margin: .5em 0;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1em;
+}
+
+p {
+    margin: 0 0 0.5em 0;
+}
+
+section {
+    display: flex;
+    flex-wrap:wrap
+}
+
+section header {
+    max-width: 200px;
+    width: 20%;
+    margin-top: 0;
+    padding-right: 2%;
+    text-align: right;
+    margin-bottom:1em
+}
+
+section section {
+    width: 64%;
+    min-height: 2em;
+    padding: 0 10% 0 2%;
+    margin-bottom:1em
+}
+
+section section > * {
+    width: 100%;
+}
+
+section section > *:first-child {
+    margin-top: 0;
+}
+
+@media screen and (max-width: 600px) {
+    section header, section section {
+        width: 100%;
+        padding: 0 1em;
+        max-width: none;
+        text-align:center
+    }
+
+    section header {
+        margin:0
+    }
+
+    section section {
+        margin-bottom:2em
+    }
+
+    section section p {
+        text-align: justify;
+        text-align-last:center
+    }
+
+    section.header div.meta, section.footer div.meta {
+        margin:0 auto 0 auto
+    }
+
+    section.header div.content, section.footer div.content {
+        border-left: none;
+        text-align:center
+    }
+
+    section.header div.meta {
+        max-width:40%
+    }
+
+    section.footer div.meta {
+        max-width:20%
+    }
+}

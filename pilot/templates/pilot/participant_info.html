@@ -1,85 +1,91 @@
 {% extends "pilot/base.html" %}
 {% block title %}Participant Information{% endblock %}
-{% block header %}
-    <h2>Participant Information</h2>
-    <p>We would like to invite you to take part in a research study. Before you decide whether you would like to take part it is important that you understand why the research is being done and what it would involve for you. Please take time to read the following information carefully and discuss it with others if you wish. Ask us if there is anything that is not clear or if you would like more information. You will be given a copy of this information sheet to keep.</p>
-    <ul>
-        <li>Version of information sheet: 01</li>
-        <li>Dated: 13th November 2019</li>
-    <ul>
-{% endblock %}
 {% block sections %}
     <section>
-        <h1>Q&A</h1>
-        
-        <h2>What is the purpose of the study?</h2>
-        <p>Smartphones are helping visually impaired users ‘see’ their world. For instance, TapTapSee allows someone to show a remote helper what the camera on their phone is seeing, and that helper can then tell the user what’s there. Seeing AI tries to do similar helpful things but without needing to rely on other people. It uses AI instead, so answers don't rely on waiting for a reply, and there’s no issue about asking again and again. The problem is that while these kinds of AI currently can say e.g. “this is a mug”, they can’t tell you which of your mugs is which, and they don’t know what e.g. a white cane is. We are trying to change this. We want these assistive technologies to work for you, so we are working with people like you to identify what things are important to your everyday life, and figure out how best to get the phone to recognise them.</p>
-        <p>Specifically, the aim of this project is to create a large dataset that can be used to train AI systems on items people who are blind or have low vision have taken themselves. We will be making an iPhone app to do this, so that we can involve hundreds or thousands of people. We need to get that app right though, so first we are observing how visually impaired people might use their phone for this.</p>
-        
-        <h2>Why have I been invited to take part?</h2>
-        <p>You have been invited to participate in this study as an adult with a vision impairment living in London. You will be one of twelve people participating in the study.</p>
-        
-        <h2>Do I have to take part?</h2>
-        <p>Participation in the study is voluntary, and you can choose not to participate in part or all of the project. You can withdraw at any stage of the project without being penalised or disadvantaged in any way. If you decide to not take part in the study, your contact information and any data collected will be permanently deleted. It is up to you to decide whether or not to take part.  If you do decide to take part you will be asked to complete an online consent form. If you decide to take part you are still free to withdraw at any time and without giving a reason.</p>
-        
-        <h2>What will happen if I take part? What do I have to do?</h2>
-        <p>A researcher will visit you at your home during a prearranged date and time.  They will talk with you about what things you might like your phone to recognise, what you’re doing when you use them, and where it happens. This could be done with you and the researcher sitting around a table, or you might want us to follow you around as you find and show us the things – whatever best works for you. As part of this, we will ask you to use the camera in your iPhone to capture five of these things. This will involve taking short videos (~10 seconds), and we will explore different techniques to do this. In total, you will make around 30 of these short videos.</p>
-        <p>This process will be filmed so that we can review what you’ve talked about and observe in detail any challenges you face capturing the things. We will also need the short videos you shot; the researcher will explain how to send these videos across to their device. The session will last for no more than two hours, we are aiming for an hour.</p>
-        <p>Prior to the home visit you will also fill in a short demographic survey hosted online.</p>
-        
-        <h2>What are the possible disadvantages and risks of taking part?</h2>
-        <p>This study is completely confidential, and we have identified no reasonably foreseeable risks of harm, safety, or side effects to you as a result of taking part in this study.  You may find it difficult to record the videos and share them with us. To reduce those risks, we will provide simple step-by-step instructions, and you can tell us at any point if it’s not working for you. A sighted researcher will be present to assist.</p>
-        
-        <h2>What are the possible benefits of taking part?</h2>
-        <p>Your participation in this research is appreciated and you will receive a £50 Amazon voucher at the end of this study. We will also ensure you are one of the first to know when the final app is released to the App Store.</p>
-        
-        <h2>How is the project being funded?</h2>
-        <p>The project is funded by Microsoft. We have an ‘AI for Accessibility grant’, see ‘Personalized object recognition through AI’ on https://www.microsoft.com/en-us/ai/ai-for-accessibility-projects</p>
-        
-        <h2>Conflicts of interests</h2>
-        <p>N/A</p>
-        
-        <h2>What should I do if I want to take part?</h2>
-        <p>If you would like to continue with the study, you will need to agree using our online consent form. If you have any questions, get in touch with Lida on the following email address lida.theodorou.2@city.ac.uk</p>
-        <p>Once you have provided consent Lida will get in touch, initially via the email address you signed up with. She will ask you your preferred date and time to arrange the visit to your house.</p>
-        
-        <h2>Data privacy statement</h2>
-        <p>City, University of London the data controller of this study based in the United Kingdom. This means that we are responsible for looking after your information and using it properly. The legal basis under which your data will be processed is City’s public task.</p>
-        <p>Your right to access, change or move your information are limited, as we need to manage your information in a specific way in order for the research to be reliable and accurate. To safeguard your rights, we will use the minimum personal-identifiable information possible (for further information please see guide to data protection).</p>
-        <p>City will use your name and contact details to contact you about the research study as necessary. If you wish to receive the results of the study, your contact details will also be kept for this purpose. The only people who will have access to your identifiable information will be the project team, listed at https://orbit.city.ac.uk/team. City will keep identifiable information about you from this study for 10 years after the study has finished.</p>
-        <p>You can find out more about how City handles data by visiting https://www.city.ac.uk/about/governance/legal. If you are concerned about how we have processed your personal data, you can contact the Information Commissioner’s Office (IOC) https://ico.org.uk/.</p>
-        
-        <h2>Will my taking part in the study be kept confidential?</h2>
-        <ul>
-            <p>Your participation will be kept confidential and we will take some precautions to guarantee your anonymity:</p>
-            <li>Your identity will be kept separate to the data collected for the study. The two will be tied with a randomly chosen participant number.</li>
-            <li>Our aim is for any data collected for the study to not contain personally identifiable information. However there likely will be identifiable information in the data, for instance a glimpse of a face in one of our recordings or GPS metadata in the videos you shoot for us. Any data with personally identifiable information will be kept private to the team.</li>
-            <li>You can choose to allow us to use the data about you for subsequent publication, for example at conferences or written-up in papers. We will take care to excerpt and anonymise any data used in this manner.</li>
-        </ul>
-        
-        <h2>What will happen to the results?</h2>
-        <p>We will study the videos and explore their use with the AI technologies we are developing. Together, this will inform how we do the data collection for the main phase of this project. You’ll hopefully see this, for instance, in the design of the iPhone app we will develop.</p>
-        <p>A summarised version of the findings of the study will be posted on the project website at orbit.city.ac.uk. Subsequent to the study, we may report our work, e.g. through publishing articles in academic journals or speaking at conferences. Anonymised and in the aggregate, all the data from the study may be provided as evidence for our conclusions. If we feel that concrete examples will help, we will chose to excerpt e.g. a short video sequence from those of you who have given publishing consent.</p>
-        <p>If you desire to have a copy of the result, please send a request by email to the researcher.</p>
-        
-        <h2>Who has reviewed the study?</h2>
-        <p>This study has been approved by City, University of London’s Computer Science Research Ethics Committee.</p>
-        <p>If you have any problems, concerns or questions about this study, you should ask to speak to a member of the research team. If you remain unhappy and wish to complain formally, you can do this through City’s complaints procedure. To complain about the study, you need to phone 020 7040 3040. You can then ask to speak to the Secretary to Senate Research Ethics Committee and inform them that the name of the project is ORBIT Pilot Study</p>
-        <p>You can also write to the Secretary at:<br>
-            Anna Ramberg<br>
-            Research Integrity Manager<br>
-            City, University of London, Northampton Square<br>
-            London, EC1V 0HB<br>
-            Email: Anna.Ramberg.1@city.ac.uk</p>
-        
-        <h2>Insurance</h2>
-        <p>City holds insurance policies which apply to this study. If you feel you have been harmed or injured by taking part in this study you may be eligible to claim compensation. This does not affect your legal rights to seek compensation. If you are harmed due to someone’s negligence, then you may have grounds for legal action.</h2>
-        
-        <h2>Further information and contact details</h2>
-        <p>Lida Theodorou – Lida.Theodorou.2@city.ac.uk</p>
-        
-        <h2>Thank you for taking the time to read this information sheet</h2>
-        <p>If you would like to participate, please continue to the sign-up page.</p>
-        <a href="">Continue</a>
+        <header>This page</header>
+        <section>
+            <h1>Participant Information</h1>
+            <p>We would like to invite you to take part in a research study. Before you decide whether you would like to take part it is important that you understand why the research is being done and what it would involve for you. Please take time to read the following information carefully and discuss it with others if you wish. Ask us if there is anything that is not clear or if you would like more information. You will be given a copy of this information sheet to keep.</p>
+            <p>Version of information sheet: 01<br>
+               Dated: 13th November 2019</p>
+        </section>
+    </section>
+    <section>
+        <header>Q&A</header>
+        <section>
+            <h2>What is the purpose of the study?</h2>
+            <p>Smartphones are helping visually impaired users ‘see’ their world. For instance, TapTapSee allows someone to show a remote helper what the camera on their phone is seeing, and that helper can then tell the user what’s there. Seeing AI tries to do similar helpful things but without needing to rely on other people. It uses AI instead, so answers don't rely on waiting for a reply, and there’s no issue about asking again and again. The problem is that while these kinds of AI currently can say e.g. “this is a mug”, they can’t tell you which of your mugs is which, and they don’t know what e.g. a white cane is. We are trying to change this. We want these assistive technologies to work for you, so we are working with people like you to identify what things are important to your everyday life, and figure out how best to get the phone to recognise them.</p>
+            <p>Specifically, the aim of this project is to create a large dataset that can be used to train AI systems on items people who are blind or have low vision have taken themselves. We will be making an iPhone app to do this, so that we can involve hundreds or thousands of people. We need to get that app right though, so first we are observing how visually impaired people might use their phone for this.</p>
+            
+            <h2>Why have I been invited to take part?</h2>
+            <p>You have been invited to participate in this study as an adult with a vision impairment living in London. You will be one of twelve people participating in the study.</p>
+            
+            <h2>Do I have to take part?</h2>
+            <p>Participation in the study is voluntary, and you can choose not to participate in part or all of the project. You can withdraw at any stage of the project without being penalised or disadvantaged in any way. If you decide to not take part in the study, your contact information and any data collected will be permanently deleted. It is up to you to decide whether or not to take part.  If you do decide to take part you will be asked to complete an online consent form. If you decide to take part you are still free to withdraw at any time and without giving a reason.</p>
+            
+            <h2>What will happen if I take part? What do I have to do?</h2>
+            <p>A researcher will visit you at your home during a prearranged date and time.  They will talk with you about what things you might like your phone to recognise, what you’re doing when you use them, and where it happens. This could be done with you and the researcher sitting around a table, or you might want us to follow you around as you find and show us the things – whatever best works for you. As part of this, we will ask you to use the camera in your iPhone to capture five of these things. This will involve taking short videos (~10 seconds), and we will explore different techniques to do this. In total, you will make around 30 of these short videos.</p>
+            <p>This process will be filmed so that we can review what you’ve talked about and observe in detail any challenges you face capturing the things. We will also need the short videos you shot; the researcher will explain how to send these videos across to their device. The session will last for no more than two hours, we are aiming for an hour.</p>
+            <p>Prior to the home visit you will also fill in a short demographic survey hosted online.</p>
+            
+            <h2>What are the possible disadvantages and risks of taking part?</h2>
+            <p>This study is completely confidential, and we have identified no reasonably foreseeable risks of harm, safety, or side effects to you as a result of taking part in this study.  You may find it difficult to record the videos and share them with us. To reduce those risks, we will provide simple step-by-step instructions, and you can tell us at any point if it’s not working for you. A sighted researcher will be present to assist.</p>
+            
+            <h2>What are the possible benefits of taking part?</h2>
+            <p>Your participation in this research is appreciated and you will receive a £50 Amazon voucher at the end of this study. We will also ensure you are one of the first to know when the final app is released to the App Store.</p>
+            
+            <h2>How is the project being funded?</h2>
+            <p>The project is funded by Microsoft. We have an ‘AI for Accessibility grant’, see ‘Personalized object recognition through AI’ on https://www.microsoft.com/en-us/ai/ai-for-accessibility-projects</p>
+            
+            <h2>Conflicts of interests</h2>
+            <p>N/A</p>
+            
+            <h2>What should I do if I want to take part?</h2>
+            <p>If you would like to continue with the study, you will need to agree using our online consent form. If you have any questions, get in touch with Lida on the following email address lida.theodorou.2@city.ac.uk</p>
+            <p>Once you have provided consent Lida will get in touch, initially via the email address you signed up with. She will ask you your preferred date and time to arrange the visit to your house.</p>
+            
+            <h2>Data privacy statement</h2>
+            <p>City, University of London the data controller of this study based in the United Kingdom. This means that we are responsible for looking after your information and using it properly. The legal basis under which your data will be processed is City’s public task.</p>
+            <p>Your right to access, change or move your information are limited, as we need to manage your information in a specific way in order for the research to be reliable and accurate. To safeguard your rights, we will use the minimum personal-identifiable information possible (for further information please see guide to data protection).</p>
+            <p>City will use your name and contact details to contact you about the research study as necessary. If you wish to receive the results of the study, your contact details will also be kept for this purpose. The only people who will have access to your identifiable information will be the project team, listed at https://orbit.city.ac.uk/team. City will keep identifiable information about you from this study for 10 years after the study has finished.</p>
+            <p>You can find out more about how City handles data by visiting https://www.city.ac.uk/about/governance/legal. If you are concerned about how we have processed your personal data, you can contact the Information Commissioner’s Office (IOC) https://ico.org.uk/.</p>
+            
+            <h2>Will my taking part in the study be kept confidential?</h2>
+            <ul>
+                <p>Your participation will be kept confidential and we will take some precautions to guarantee your anonymity:</p>
+                <li>Your identity will be kept separate to the data collected for the study. The two will be tied with a randomly chosen participant number.</li>
+                <li>Our aim is for any data collected for the study to not contain personally identifiable information. However there likely will be identifiable information in the data, for instance a glimpse of a face in one of our recordings or GPS metadata in the videos you shoot for us. Any data with personally identifiable information will be kept private to the team.</li>
+                <li>You can choose to allow us to use the data about you for subsequent publication, for example at conferences or written-up in papers. We will take care to excerpt and anonymise any data used in this manner.</li>
+            </ul>
+            
+            <h2>What will happen to the results?</h2>
+            <p>We will study the videos and explore their use with the AI technologies we are developing. Together, this will inform how we do the data collection for the main phase of this project. You’ll hopefully see this, for instance, in the design of the iPhone app we will develop.</p>
+            <p>A summarised version of the findings of the study will be posted on the project website at orbit.city.ac.uk. Subsequent to the study, we may report our work, e.g. through publishing articles in academic journals or speaking at conferences. Anonymised and in the aggregate, all the data from the study may be provided as evidence for our conclusions. If we feel that concrete examples will help, we will chose to excerpt e.g. a short video sequence from those of you who have given publishing consent.</p>
+            <p>If you desire to have a copy of the result, please send a request by email to the researcher.</p>
+            
+            <h2>Who has reviewed the study?</h2>
+            <p>This study has been approved by City, University of London’s Computer Science Research Ethics Committee.</p>
+            <p>If you have any problems, concerns or questions about this study, you should ask to speak to a member of the research team. If you remain unhappy and wish to complain formally, you can do this through City’s complaints procedure. To complain about the study, you need to phone 020 7040 3040. You can then ask to speak to the Secretary to Senate Research Ethics Committee and inform them that the name of the project is ORBIT Pilot Study</p>
+            <p>You can also write to the Secretary at:<br>
+                Anna Ramberg<br>
+                Research Integrity Manager<br>
+                City, University of London, Northampton Square<br>
+                London, EC1V 0HB<br>
+                Email: Anna.Ramberg.1@city.ac.uk</p>
+            
+            <h2>Insurance</h2>
+            <p>City holds insurance policies which apply to this study. If you feel you have been harmed or injured by taking part in this study you may be eligible to claim compensation. This does not affect your legal rights to seek compensation. If you are harmed due to someone’s negligence, then you may have grounds for legal action.</h2>
+            
+            <h2>Further information and contact details</h2>
+            <p>Lida Theodorou – Lida.Theodorou.2@city.ac.uk</p>
+        </section>
+    </section>
+    <section>
+        <header>Interested?</header>
+        <section>
+            <h2>Thank you for taking the time to read this information sheet</h2>
+            <p>If you would like to participate, please continue to the sign-up page.</p>
+            <a href="">Continue</a>
+        </section>
     </section>
 {% endblock %}

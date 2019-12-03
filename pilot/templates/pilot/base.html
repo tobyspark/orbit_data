@@ -1,22 +1,26 @@
+<!doctype html>
 <html>
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>ORBIT – {% block title %}Object Recognition for Blind Image Training{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/orbit.css">
 </head>
 
 <body>
-    <header>
-        <h1>The Study</h1>
-        <h2>Pilot study for metalearning for personalised object recognition aimed at visually impaired people</h1>
-        <ul>
-            <li>Principal investigator: Dr Simone Stumpf</li>
-            <li>REC reference number: ETH1920-0331</li>
-            <li>City, University of London</li>
-        </ul>
-        
-        {% block header %}{% endblock %}
-    </header>
+    <section>
+        <header>The Study</header>
+        <section>
+            <h2>Pilot study for metalearning for personalised object recognition aimed at visually impaired people</h1>
+            <p>Principal investigator: Dr Simone Stumpf<br>
+               REC reference number: ETH1920-0331<br>
+               City, University of London</p>
+        </section>
+    </section>
     {% block sections %}{% endblock %}
 </body>
 </html>
