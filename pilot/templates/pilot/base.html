@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ORBIT – {% block title %}Project Name{% endblock %}</title>
+</head>
+
+<body>
+    <header>
+        <h1>The Study</h1>
+        <h2>Project Name</h1>
+        <ul>
+            <li>Principal investigator: ***REMOVED***</li>
+            <li>REC reference number: ***REMOVED***</li>
+            <li>***REMOVED***</li>
+        </ul>
+        
+        {% block header %}{% endblock %}
+    </header>
+    {% block sections %}{% endblock %}
+</body>
+</html>
