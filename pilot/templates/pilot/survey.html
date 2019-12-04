@@ -10,6 +10,7 @@
         </section>
     </section>
     <section>
+        <form method="post">
         {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
         {% for fieldset in form.fieldsets %}
             {% if fieldset.legend %}
@@ -34,5 +35,10 @@
                 </ul>
             </section>
         {% endfor %}
+            <header>Thanks!</header>
+            <section>
+                <input type="submit" value="Submit">
+            </section>
+        </form>
     </section>
 {% endblock %}
