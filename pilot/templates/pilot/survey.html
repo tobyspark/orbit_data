@@ -1,6 +1,6 @@
-{% extends "pilot/base.html" %}
-{% block title %}Participant Information{% endblock %}
-{% block sections %}
+{% extends "pilot/form.html" %}
+{% block title %}Background survey{% endblock %}
+{% block pre_form_sections %}
     <section>
         <header>This page</header>
         <section>
@@ -8,38 +8,5 @@
             <p>When explaining our study results, we will need to summarise our participant group, such as age range and visual impairments. Plus, knowing a bit more about your use of your iPhone will inform our thinking – and allow us to make best use of our time visiting you.</p>
             <p>We ask you to complete the following background questionnaire.</p>
         </section>
-    </section>
-    <section>
-        <form method="post">
-        {% csrf_token %}
-        {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
-        {% for fieldset in form.fieldsets %}
-            {% if fieldset.legend %}
-            <header>{{ fieldset.legend }}</header>
-            {% endif %}
-            <section>
-                {% if fieldset.description %}
-                <p class="description">{{ fieldset.description }}</p>
-                {% endif %}
-                <ul>
-                {% for field in fieldset %}
-                {% if field.is_hidden %}
-                  {{ field }}
-                {% else %}
-                  <li{{ field.row_attrs }}>
-                    {{ field.errors }}
-                    {{ field }}
-                    {% if field.label %}{{ field.label_tag | cut:":"}}{% endif %}
-                  </li>
-                {% endif %}
-                {% endfor %}
-                </ul>
-            </section>
-        {% endfor %}
-            <header>Thanks!</header>
-            <section>
-                <input type="submit" value="Submit">
-            </section>
-        </form>
     </section>
 {% endblock %}

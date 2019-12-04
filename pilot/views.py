@@ -16,7 +16,7 @@ def consent(request):
     else:
         form = ConsentForm()
     
-    return render(request, 'pilot/survey.html', {'form': form})
+    return render(request, 'pilot/consent.html', {'form': form})
 
 def survey(request, token):
     if request.method == 'POST':

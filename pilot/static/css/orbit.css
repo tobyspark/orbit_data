@@ -61,6 +61,14 @@ form {
 
 label {
     margin-left: 0.5em;
+    display: inline-block;
+    width: 90%
+}
+
+input[type="checkbox"] {
+    vertical-align: top; /* Hack alert: should be text-top */
+    position: relative;
+    top: 0.1875em;
 }
 
 input[type="number"] {
@@ -97,7 +105,7 @@ textarea {
     box-sizing: border-box;
 }
 
-input[type="submit"] {
+input[type="submit"], a.button {
     font-family: inherit;
     font-size: 100%;
     padding: 0.5em 1em;
@@ -141,6 +149,10 @@ form li {
 
 form ul > li > ul { /* Radio button set */
     margin-bottom: 1em;
+}
+
+.errorlist {
+    color: red;
 }
 
 @media screen and (max-width: 600px) {
