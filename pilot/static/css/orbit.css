@@ -26,7 +26,7 @@ p {
 
 section {
     display: flex;
-    flex-wrap:wrap
+    flex-wrap: wrap
 }
 
 section header {
@@ -35,14 +35,15 @@ section header {
     margin-top: 0;
     padding-right: 2%;
     text-align: right;
-    margin-bottom:1em
+    margin-bottom: 1em;
+    font-weight: bold;
 }
 
 section section {
     width: 64%;
     min-height: 2em;
     padding: 0 10% 0 2%;
-    margin-bottom:1em
+    margin-bottom: 1em
 }
 
 section section > * {
@@ -53,9 +54,56 @@ section section > *:first-child {
     margin-top: 0;
 }
 
+label {
+    margin-left: 0.5em;
+}
+
+input[type="number"] {
+    width: 9em;
+    max-width: 100%;
+}
+
+input[type="text"] {
+    width: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+select,
+textarea {
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
 /* form */ ul {
     list-style-type: none;
     padding-inline-start: unset;
+    margin-block-start: unset;
+}
+
+/* form */ li {
+    margin-bottom: 0.2em;
+}
+
+/* form */ ul > li > ul { /* Radio button set */
+    margin-bottom: 1em;
 }
 
 @media screen and (max-width: 600px) {
@@ -63,36 +111,22 @@ section section > *:first-child {
         width: 100%;
         padding: 0 1em;
         max-width: none;
-        text-align:center
+        text-align:left;
     }
 
     section header {
-        margin:0
+        margin: 0 0 .5em 0;
+    }
+    
+    section header::after {
+        content: " —"
     }
 
     section section {
-        margin-bottom:2em
+        margin-bottom: 2em
     }
 
-    section section p {
+    section section p, section section ul {
         text-align: justify;
-        text-align-last:center
-    }
-
-    section.header div.meta, section.footer div.meta {
-        margin:0 auto 0 auto
-    }
-
-    section.header div.content, section.footer div.content {
-        border-left: none;
-        text-align:center
-    }
-
-    section.header div.meta {
-        max-width:40%
-    }
-
-    section.footer div.meta {
-        max-width:20%
     }
 }
