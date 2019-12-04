@@ -27,7 +27,7 @@
                   <li{{ field.row_attrs }}>
                     {{ field.errors }}
                     {{ field }}
-                    {{ field.label_tag }}
+                    {{ field.label_tag | cut:":"}}
                   </li>
                 {% endif %}
                 {% endfor %}
