@@ -145,20 +145,21 @@ class SurveyForm(BetterForm):
             }),
         )
     genderChoice = forms.ChoiceField(
+        required=False,
         label='',
         choices=[
             ('M', 'Male'),
             ('F', 'Female'),
-            ('O', 'Other'),
             ],
         widget=forms.RadioSelect,
         )
     genderIdentify = forms.CharField(
+        required=False,
         label='',
         min_length=1,
         max_length=128,
         widget=forms.TextInput(attrs={
-            'placeholder': 'How do you identify?'
+            'placeholder': 'Or, how do you identify?'
             }),
         )
     vision_light_perception = forms.ChoiceField(
@@ -170,84 +171,109 @@ class SurveyForm(BetterForm):
         widget=forms.RadioSelect,
         )
     vision_full_fov = forms.BooleanField(
+        required=False,
         label='I have full field of vision (peripheral vision)'
         )
     vision_reduced_fov = forms.BooleanField(
+        required=False,
         label='I have severely reduced field of vision (tunnel vision)'
         )
     vision_1to3 = forms.BooleanField(
+        required=False,
         label='I can see objects between 1 and 3 meters away'
         )
     vision_3to6 = forms.BooleanField(
+        required=False,
         label='I can see objects between 3 and 6 meters away'
         )
     vision_6tox = forms.BooleanField(
+        required=False,
         label='I can see objects more than 6 meters away'
         )
     vision_more = forms.CharField(
+        required=False,
         label='',
         widget=forms.TextInput(attrs={
             'placeholder': 'Anything else? e.g. how long have you been visually impaired?',
             }),
         )
     accessibility_voiceover = forms.BooleanField(
+        required=False,
         label='VoiceOver'
         )
     accessibility_zoom = forms.BooleanField(
+        required=False,
         label='Zoom'
         )
     accessibility_magnifier = forms.BooleanField(
+        required=False,
         label='Magnifier'
         )
     accessibility_displayaccomodations = forms.BooleanField(
+        required=False,
         label='Display Accommodations'
         )
     accessibility_speech = forms.BooleanField(
+        required=False,
         label='Speech (Speak selection, Speak Screen)'
         )
     accessibility_largetext = forms.BooleanField(
+        required=False,
         label='Larger text'
         )
     accessibility_boldtext = forms.BooleanField(
+        required=False,
         label='Bold text'
     )
     accessibility_buttonshapes = forms.BooleanField(
+        required=False,
         label='Button shapes'
         )
     accessibility_reducetransparency = forms.BooleanField(
+        required=False,
         label="Reduce transparency"
         )
     accessibility_increasecontrast = forms.BooleanField(
+        required=False,
         label="Increase contrast"
         )
     accessibility_reducemotion = forms.BooleanField(
+        required=False,
         label="Reduce motion"
         )
     accessibility_siri = forms.BooleanField(
+        required=False,
         label='Siri'
         )
     accessibility_braille = forms.BooleanField(
+        required=False,
         label='Braille display & Braille commands'
         )
     accessibility_more = forms.CharField(
+        required=False,
         label='',
         widget=forms.TextInput(attrs={
             'placeholder': 'List any others...',
             }),
         )
     apps_taptapsee = forms.BooleanField(
+        required=False,
         label="TapTapSee"
         )
     apps_bemyeyes = forms.BooleanField(
+        required=False,
         label="Be my eyes"
         )
     apps_seeingai = forms.BooleanField(
+        required=False,
         label='Seeing AI'
         )
     apps_envision = forms.BooleanField(
+        required=False,
         label='Envision'
         )
     apps_more = forms.CharField(
+        required=False,
         label='',
         widget=forms.TextInput(attrs={
             'placeholder': 'List any others...',
@@ -263,8 +289,10 @@ class SurveyForm(BetterForm):
         widget=forms.RadioSelect,
         )
     camera_photos = forms.BooleanField(
+        required=False,
         label="I take photos"
         )
     camera_videos = forms.BooleanField(
+        required=False,
         label="I take videos"
         )

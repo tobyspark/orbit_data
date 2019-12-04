@@ -11,6 +11,7 @@
     </section>
     <section>
         <form method="post">
+        {% csrf_token %}
         {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
         {% for fieldset in form.fieldsets %}
             {% if fieldset.legend %}
