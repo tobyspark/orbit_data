@@ -254,7 +254,7 @@ class SurveyForm(BetterForm):
             }),
         )
     camera_usage = forms.ChoiceField(
-        label="Do you use the camera app on your iPhone?",
+        label="",
         choices=[
             ('N', 'Never'),
             ('O', 'Occasional use'),
