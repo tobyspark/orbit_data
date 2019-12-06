@@ -29,7 +29,7 @@ section {
     flex-wrap: wrap
 }
 
-section header {
+section > header {
     max-width: 200px;
     width: 20%;
     margin-top: 0;
@@ -39,18 +39,18 @@ section header {
     font-weight: bold;
 }
 
-section section {
+section > div {
     width: 64%;
     min-height: 2em;
     padding: 0 10% 0 2%;
     margin-bottom: 1em
 }
 
-section section > * {
+section > div > * {
     width: 100%;
 }
 
-section section > *:first-child {
+section > div > *:first-child {
     margin-top: 0;
 }
 
@@ -156,26 +156,26 @@ form ul > li > ul { /* Radio button set */
 }
 
 @media screen and (max-width: 600px) {
-    section header, section section {
+    section > header, section > div {
         width: 100%;
         padding: 0 1em;
         max-width: none;
         text-align:left;
     }
 
-    section header {
+    section > header {
         margin: 0 0 .5em 0;
     }
     
-    section header::after {
+    section > header::after {
         content: " —"
     }
 
-    section section {
+    section > div {
         margin-bottom: 2em
     }
 
-    section section p, section section ul {
+    section > div p, section > div ul {
         text-align: justify;
     }
 }

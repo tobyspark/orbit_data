@@ -2,41 +2,50 @@
 {% block title %}Participant Information{% endblock %}
 {% block sections %}
     {% block pre_form_sections %}{% endblock %}
+    <form method="post">
+    {{ csrf_input }}
+    {% if form.has_error(NON_FIELD_ERRORS) %}
     <section>
-        <form method="post">
-        {{ csrf_input }}
-        {% if form.non_field_errors %}{{ form.non_field_errors() }}{% endif %}
-        {% for fieldset in form.fieldsets %}
-            {% if fieldset.legend %}
-            <header>{{ fieldset.legend }}</header>
-            {% endif %}
-            <section>
-                {% if fieldset.description %}
-                <p class="description">{{ fieldset.description }}</p>
-                {% endif %}
-                <ul>
-                {% for field in fieldset %}
-                {% if field.is_hidden %}
-                  {{ field }}
-                {% else %}
-                  <li{{ field.row_attrs }}>
-                    {% if field.errors %}
-                    {{ field.errors }}
-                    {% endif %}
-                    {{ field | replace("\n", "\n                    ") | safe }}
-                    {% if field.label %}
-                    {{ field.label_tag(label_suffix='') }}
-                    {% endif %}
-                  </li>
-                {% endif %}
-                {% endfor %}
-                </ul>
-            </section>
-        {% endfor %}
-            <header>Thanks!</header>
-            <section>
-                <input type="submit" value="Submit">
-            </section>
-        </form>
+        <header>Please correct</header>
+        <div>
+        {{ form.non_field_errors() }}
+        </div>
     </section>
+    {% endif %}
+    {% for fieldset in form.fieldsets %}
+    <section>
+        {% if fieldset.legend %}
+        <header>{{ fieldset.legend }}</header>
+        {% endif %}
+        <div>
+            {% if fieldset.description %}
+            <p class="description">{{ fieldset.description }}</p>
+            {% endif %}
+            <ul>
+            {% for field in fieldset %}
+            {% if field.is_hidden %}
+              {{ field }}
+            {% else %}
+              <li{{ field.row_attrs }}>
+                {% if field.errors %}
+                {{ field.errors }}
+                {% endif %}
+                {{ field | replace("\n", "\n                ") | safe }}
+                {% if field.label %}
+                {{ field.label_tag(label_suffix='') }}
+                {% endif %}
+              </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endfor %}
+    <section>
+        <header>Thanks!</header>
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </section>
+    </form>
 {% endblock %}
