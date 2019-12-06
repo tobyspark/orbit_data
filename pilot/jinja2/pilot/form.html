@@ -20,9 +20,13 @@
                   {{ field }}
                 {% else %}
                   <li{{ field.row_attrs }}>
+                    {% if field.errors %}
                     {{ field.errors }}
-                    {{ field }}
-                    {% if field.label %}{{ field.label_tag(label_suffix='') }}{% endif %}
+                    {% endif %}
+                    {{ field | replace("\n", "\n                    ") | safe }}
+                    {% if field.label %}
+                    {{ field.label_tag(label_suffix='') }}
+                    {% endif %}
                   </li>
                 {% endif %}
                 {% endfor %}

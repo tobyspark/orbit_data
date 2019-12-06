@@ -71,6 +71,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'orbit_pilot.jinja2.environment',
+            'trim_blocks': True,
+            'lstrip_blocks': True,
         },
     },
 ]
