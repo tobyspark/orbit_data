@@ -181,7 +181,7 @@ form ul > li > ul { /* Radio button set */
         margin: 0 0 .5em 0;
     }
     
-    section > header::after {
+    section > header span[aria-hidden="true"]::after {
         content: " —"
     }
 

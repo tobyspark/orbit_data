@@ -6,7 +6,7 @@
     {{ csrf_input }}
     {% if form.has_error(NON_FIELD_ERRORS) %}
     <section>
-        <header><h3>Please correct</h3></header>
+        <header><h3>Please correct<span aria-hidden="true"></span></h3></header>
         <div>
         {{ form.non_field_errors() }}
         </div>
@@ -15,7 +15,7 @@
     {% for fieldset in form.fieldsets %}
     <section>
         {% if fieldset.legend %}
-        <header><h4>{{ fieldset.legend }}</h4></header>
+        <header><h4>{{ fieldset.legend }}<span aria-hidden="true"></span></h4></header>
         {% endif %}
         <div>
             {% if fieldset.description %}
@@ -42,7 +42,7 @@
     </section>
     {% endfor %}
     <section>
-        <header><h3>Thanks!</h3></header>
+        <header><h3>Thanks!<span aria-hidden="true"></span></h3></header>
         <div>
             <input type="submit" value="Submit">
         </div>
