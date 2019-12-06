@@ -8,20 +8,35 @@ body {
     padding-top: 2em;
 }
 
-h1, h2 {
-    margin: .5em 0;
-}
+/* h1, h2 used in section content */
+/* h3, h4 used in section header */
 
 h1 {
     font-size: 1.5em;
 }
 
-h2 {
+h2, h3, h4 {
     font-size: 1em;
+}
+
+h4 {
+    font-weight: normal;
+}
+
+h1, h2 {
+    margin: .5em 0;
+}
+
+h3, h4 {
+    margin: 0;
 }
 
 p {
     margin: 0 0 0.5em 0;
+}
+
+p + ul {
+    margin-block-start: 0;
 }
 
 section {
@@ -36,7 +51,6 @@ section > header {
     padding-right: 2%;
     text-align: right;
     margin-bottom: 1em;
-    font-weight: bold;
 }
 
 section > div {
