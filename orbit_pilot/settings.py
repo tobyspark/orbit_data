@@ -65,6 +65,14 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'orbit_pilot.jinja2.environment',
+        },
+    },
 ]
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

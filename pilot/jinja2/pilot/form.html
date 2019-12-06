@@ -4,8 +4,8 @@
     {% block pre_form_sections %}{% endblock %}
     <section>
         <form method="post">
-        {% csrf_token %}
-        {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+        {{ csrf_input }}
+        {% if form.non_field_errors %}{{ form.non_field_errors() }}{% endif %}
         {% for fieldset in form.fieldsets %}
             {% if fieldset.legend %}
             <header>{{ fieldset.legend }}</header>
@@ -22,7 +22,7 @@
                   <li{{ field.row_attrs }}>
                     {{ field.errors }}
                     {{ field }}
-                    {% if field.label %}{{ field.label_tag | cut:":"}}{% endif %}
+                    {% if field.label %}{{ field.label_tag(label_suffix='') }}{% endif %}
                   </li>
                 {% endif %}
                 {% endfor %}
