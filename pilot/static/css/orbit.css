@@ -8,27 +8,25 @@ body {
     padding-top: 2em;
 }
 
-/* h1, h2 used in section content */
-/* h3, h4 used in section header */
+h1, h2, h3, h4 {
+    font-size: 1em;
+    margin: 1em 0 0.5em 0;
+}
 
-h1 {
+section > div > h2 {
     font-size: 1.5em;
 }
 
-h2, h3, h4 {
-    font-size: 1em;
+section > header {
+    font-weight: bold;
 }
 
-h4 {
-    font-weight: normal;
-}
-
-h1, h2 {
-    margin: .5em 0;
-}
-
-h3, h4 {
+section > header > h3, section > header > h4 {
     margin: 0;
+}
+
+section > header > h4 {
+    font-weight: normal;
 }
 
 p {
