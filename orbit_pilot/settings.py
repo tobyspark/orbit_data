@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms', # For overriding rendering templates
     'form_utils',
+    'parsley',
 ]
 
 MIDDLEWARE = [

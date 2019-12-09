@@ -1,12 +1,14 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from form_utils.forms import BetterForm
+from parsley.decorators import parsleyfy
 
 def validate_age(value):
     if value < 20: raise ValidationError('Age too young')
     if value > 100: raise ValidationError('Age too old')
     if value % 5 != 0: raise ValidationError('Age not rounded to nearest five-years')
 
+@parsleyfy
 class ConsentForm(BetterForm):
     class Meta:
         fieldsets = [
@@ -76,6 +78,7 @@ class ConsentForm(BetterForm):
             }),
     )
 
+@parsleyfy
 class SurveyForm(BetterForm):
     class Meta:
         fieldsets = [
