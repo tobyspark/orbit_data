@@ -136,6 +136,11 @@ class SurveyForm(BetterForm):
                     'camera_videos',
                     ]}),
             ]
+        parsley_extras = {
+            'age': {
+                'error-message': "Please round to the nearest five years.",
+            },
+        }
                 
     age = forms.IntegerField(
         label='',
