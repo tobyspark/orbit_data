@@ -53,6 +53,7 @@
     <script src="https://cdn.jsdelivr.net/gh/guillaumepotier/Parsley.js@2.9.1/dist/parsley.min.js"></script>
     <script>
     window.Parsley.options.errorsWrapper = "<ul class=\"parsley-errors-list\" role=\"alert\"></ul>"
+    window.Parsley.options.trigger = 'blur'
     window.Parsley.on('field:success', function() {
       // This global callback will be called for any field that fails validation.
       this.element.removeAttribute('aria-invalid');
