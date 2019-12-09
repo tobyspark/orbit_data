@@ -2,7 +2,7 @@
 {% block title %}Participant Information{% endblock %}
 {% block sections %}
     {% block pre_form_sections %}{% endblock %}
-    <form method="post">
+    <form method="post" data-parsley-validate>
     {{ csrf_input }}
     {% if form.has_error(NON_FIELD_ERRORS) %}
     <section>
@@ -48,4 +48,7 @@
         </div>
     </section>
     </form>
+    <link rel="stylesheet" href="/static/css/parsley.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="{{ static('parsley/js/parsley.min.js') }}"></script>
 {% endblock %}
