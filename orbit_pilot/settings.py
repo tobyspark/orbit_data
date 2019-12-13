@@ -53,6 +53,16 @@ ROOT_URLCONF = 'orbit_pilot.urls'
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'orbit_pilot.jinja2.environment',
+            'trim_blocks': True,
+            'lstrip_blocks': True,
+        },
+    },
+    { # Required for Admin
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -63,16 +73,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-        },
-    },
-    {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'environment': 'orbit_pilot.jinja2.environment',
-            'trim_blocks': True,
-            'lstrip_blocks': True,
         },
     },
 ]
