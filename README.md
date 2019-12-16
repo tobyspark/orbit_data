@@ -8,7 +8,7 @@
 cd (mdfind -name 'Orbit-Webapp-Pilot')
 source ./env/bin/activate.fish
 set -x STATIC_ROOT 'xxx'
-set -x MEDIA_ROOT 'xxx'
+set -x MEDIA_ROOT 'xxxx'
 cd orbit_pilot/
 python manage.py runserver 0:8000
 ```
