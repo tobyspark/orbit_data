@@ -7,3 +7,15 @@
 {% endset %}
 
 {{ widget1_html | replace('WIDGET2_REPLACE', widget2_html) }}
+
+<script>
+    var genderOption = document.getElementById("{{ widget.subwidgets[0].attrs.id }}")
+    var genderOtherRadio = document.getElementById("{{ widget.subwidgets[0].optgroups[2][1][0].attrs.id }}")
+    var genderOtherDescription = document.getElementById("{{ widget.subwidgets[1].attrs.id }}")
+    genderOption.addEventListener("change", function() {
+        if (genderOtherRadio.checked)
+            { genderOtherDescription.setAttribute("required", "") }
+        else
+            { genderOtherDescription.removeAttribute("required") }
+        })
+</script>
