@@ -1,17 +1,28 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
+GENDER_CHOICES = [
+    ('M', 'Male'),
+    ('F', 'Female'),
+    ('O', 'WIDGET2_REPLACE'),
+    ]
 
 class GenderWidget(forms.MultiWidget):
-    def __init__(self, attrs={}):
+    template_name = 'django/forms/widgets/gender.html'
+
+    def __init__(self, attrs=None):
         widgets = (
             forms.RadioSelect(
-                choices=[
-                    ('M', 'Male'),
-                    ('F', 'Female'),
-                    ],
-                attrs=attrs,
+                choices=GENDER_CHOICES,
+                attrs={
+                    'required': True,
+                    },
                 ),
             forms.TextInput(
-                attrs=attrs.update({'placeholder': 'Or, how do you identify?'}),
+                attrs={
+                    'placeholder': 'Or, how do you identify?',
+                    'required': False
+                    },
                 ),
         )
         super().__init__(widgets, attrs)
@@ -25,29 +36,29 @@ class GenderWidget(forms.MultiWidget):
 
 class GenderField(forms.MultiValueField):
     def __init__(self, **kwargs):
-        widget = GenderWidget()
-        fields = (
-            forms.ChoiceField(
-                required=False,
-                label='',
-                choices=[
-                    ('M', 'Male'),
-                    ('F', 'Female'),
-                    ],
+        super().__init__(
+            widget=GenderWidget,
+            fields=(
+                forms.ChoiceField(
+                    required=True,
+                    label='',
+                    choices=GENDER_CHOICES,
+                    ),
+                forms.CharField(
+                    required=False,
+                    label='',
+                    min_length=1,
+                    max_length=128,
+                    ),
                 ),
-            forms.CharField(
-                required=False,
-                label='',
-                min_length=1,
-                max_length=128,
-                ),
-        )
-        super().__init__(widget=widget, fields=fields, required=False, **kwargs)
+            require_all_fields=False,
+            required=False,
+            **kwargs)
 
     def compress(self, data_list):
         if data_list:
             if data_list[0] in ['M', 'F'] and data_list[1] is '':
                 return data_list[0]
-            if data_list[0] == '' and len(data_list[1]) > 0:
+            if data_list[0] == 'O' and len(data_list[1]) > 0:
                 return data_list[1]
-        return None
+        raise ValidationError('Too short. Either choose M/F or be more descriptive.')
