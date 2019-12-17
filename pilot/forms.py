@@ -31,6 +31,7 @@ class ConsentForm(BetterForm):
             ('Publishing', {
                 'fields': [
                     'publishing1',
+                    'publishing1b',
                     'publishing2',
                     ]}),
             ('Signed', {
@@ -67,10 +68,13 @@ class ConsentForm(BetterForm):
         label='I agree to take part in the above study, titled: “Pilot study for meta learning for personalised object recognition aimed at visually impaired people”.'
         )
     publishing1 = forms.BooleanField(
-        label='The videos that the project takes of me along with the videos I share with the project can be used for subsequent publication.'
+        label='The videos that the project takes of me along with the videos I share with the project can be used for subsequent publication and academic presentation.'
+        )
+    publishing1b = forms.BooleanField(
+        label='The videos that the project takes of me along with the videos I share with the project can be used for subsequent publication and academic presentation only if my face is blurred and my voice removed (if present).'
         )
     publishing2 = forms.BooleanField(
-        label='Direct quotes from the audio recordings that the project takes of me can be used for subsequent publication.'
+        label='Direct quotes from the audio recordings that the project takes of me can be used for subsequent publication and academic presentation.'
         )
     name = forms.CharField(
         label='',
