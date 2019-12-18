@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms', # For overriding rendering templates
     'form_utils',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,17 @@ STATIC_ROOT = os.environ['STATIC_ROOT']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.environ['MEDIA_ROOT']
+
+# REST API
+# https://www.django-rest-framework.org
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    # FIXME: change this!
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
