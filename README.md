@@ -45,6 +45,8 @@ ufw status
 
 pip3 install django==2.2.6
 pip3 install django-form-utils
+pip3 install django-parsley
+pip3 install djangorestframework
 pip3 install jinja2
 sudo apt-get install gunicorn3
 sudo apt-get install nginx
