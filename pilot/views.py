@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.db import IntegrityError
+from datetime import datetime
 
 from .forms import ConsentForm, SurveyForm
+from .models import Participant, Survey
 
 def info(request):
     return render(request, 'pilot/participant_info.html')
@@ -11,18 +14,55 @@ def consent(request):
     if request.method == 'POST':
         form = ConsentForm(request.POST)
         if form.is_valid():
-            # TODO: act on cleaned_data
-            return HttpResponseRedirect(reverse('survey', kwargs={'token': 'TODO'}))
+            while True:
+                try:
+                    participant = Participant(
+                        email=form.cleaned_data['email'],
+                        name=form.cleaned_data['name'],
+                    )
+                    participant.save()
+                    return HttpResponseRedirect(reverse('survey', kwargs={'token': participant.survey_token}))
+                except IntegrityError as error:
+                    # Email exists. Take user back to form.
+                    if Participant.objects.filter(email=participant.email).exists():
+                        form.add_error('email', 'This email address is already taken')
+                        break
+                    # ID or token exists. Try again, generating new values.
+                    print(error)
+                    pass
     else:
         form = ConsentForm()
     
     return render(request, 'pilot/consent.html', {'form': form})
 
 def survey(request, token):
+    # Check the URL corresponds to a participant
+    try:
+        participant = Participant.objects.get(survey_token=token)
+    except Participant.DoesNotExist:
+        # TODO: Log that a survey page with invalid token was hit.
+        # TODO: Message the user that token was invalid.
+        return HttpResponseRedirect(reverse('info'))
+    
+    # Check the participant is still to complete the survey
+    if participant.survey_done:
+        # TODO: Log that a survey page previously completed was hit.
+        # TODO: Message the user that they have already completed the survey.
+        return HttpResponseRedirect(reverse('survey_done'))
+    
+    # Update the participant's survey started timestamp, enabling e.g. day later reminders.
+    # TODO: Machinery for e.g. day later reminders
+    participant.survey_started = datetime.now()
+    
     if request.method == 'POST':
         form = SurveyForm(request.POST)
         if form.is_valid():
-            # TODO: act on cleaned_data
+            survey_data = {
+                'participant': participant,
+                **form.cleaned_data,
+            }
+            survey = Survey(**survey_data)
+            survey.save()
             return HttpResponseRedirect(reverse('survey_done'))
     else:
         form = SurveyForm()

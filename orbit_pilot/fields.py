@@ -35,6 +35,8 @@ class GenderWidget(forms.MultiWidget):
         return ['', '']
 
 class GenderField(forms.MultiValueField):
+    CHAR_LENGTH=128
+    
     def __init__(self, **kwargs):
         super().__init__(
             widget=GenderWidget,
@@ -48,7 +50,7 @@ class GenderField(forms.MultiValueField):
                     required=False,
                     label='',
                     min_length=1,
-                    max_length=128,
+                    max_length=GenderField.CHAR_LENGTH,
                     ),
                 ),
             require_all_fields=False,
