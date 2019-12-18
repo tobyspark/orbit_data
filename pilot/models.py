@@ -2,7 +2,7 @@ from django.db import models
 from datetime import datetime
 import secrets
 
-from orbit_pilot.fields import GenderField
+from orbit.fields import GenderField
 
 TOKEN_BYTES = 16
 

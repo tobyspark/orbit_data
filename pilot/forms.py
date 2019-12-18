@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from form_utils.forms import BetterForm
 from parsley.decorators import parsleyfy
 
-from orbit_pilot.fields import GenderField
+from orbit.fields import GenderField
 
 def validate_age(value):
     if value < 20: raise ValidationError('Age too young')

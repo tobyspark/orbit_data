@@ -1,4 +1,4 @@
-# orbit_pilot
+# orbit
 
 ...currently notes to self. check all these commands before actioning, it has been assembled retrospectively
 
@@ -9,7 +9,7 @@ cd (mdfind -name 'Orbit-Webapp-Pilot')
 source ./env/bin/activate.fish
 set -x STATIC_ROOT 'xxx'
 set -x MEDIA_ROOT 'xxxx'
-cd orbit_pilot/
+cd orbit/
 python manage.py runserver 0:8000
 ```
  
@@ -49,7 +49,7 @@ pip3 install jinja2
 sudo apt-get install gunicorn3
 sudo apt-get install nginx
 
-cd /home/orbit/orbit_pilot
+cd /home/orbit/orbit
 
 sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 sudo cp provision/nginx.conf /etc/nginx/nginx.conf
@@ -57,5 +57,5 @@ sudo nginx -s reload
 
 set -a; source .env; set +a
 python3 manage.py collectstatic
-gunicorn3 -b unix:/tmp/gunicorn.sock orbit_pilot.wsgi
+gunicorn3 -b unix:/tmp/gunicorn.sock orbit.wsgi
 ```
