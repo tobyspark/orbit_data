@@ -7,8 +7,8 @@
 ```
 cd (mdfind -name 'Orbit-Webapp-Pilot')
 source ./env/bin/activate.fish
-set -x STATIC_ROOT 'xxx'
-set -x MEDIA_ROOT 'xxxx'
+set -x STATIC_ROOT (mdfind -name 'ORBITscratch')/static
+set -x MEDIA_ROOT (mdfind -name 'ORBITscratch')/media
 cd orbit/
 python manage.py runserver 0:8000
 ```
