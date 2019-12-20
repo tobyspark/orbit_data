@@ -29,6 +29,7 @@ class ConsentForm(BetterForm):
                     'consent7',
                     ]}),
             ('Publishing', {
+                'description': 'You can help us communicate the results of our research by allowing us to use the videos and your reactions in our academic work. But you may wish not to do so. These statements are optional and relate to us sharing these data anonymously - you won’t be identified or identifiable in the quotes or videos that we share.',
                 'fields': [
                     'publishing1',
                     'publishing1b',
@@ -68,13 +69,13 @@ class ConsentForm(BetterForm):
         label='I agree to take part in the above study, titled: “Pilot study for meta learning for personalised object recognition aimed at visually impaired people”.'
         )
     publishing1 = forms.BooleanField(
-        label='The videos that the project takes of me along with the videos I share with the project can be used for subsequent publication and academic presentation.'
+        label='I consent to the videos that I take of my objects and then share with the project being used in research publications and presentations.'
         )
     publishing1b = forms.BooleanField(
-        label='The videos that the project takes of me along with the videos I share with the project can be used for subsequent publication and academic presentation only if my face is blurred and my voice removed (if present).'
+        label='I consent to the videos taken of me using my iPhone at home to capture these videos being used in research publications and presentations.'
         )
     publishing2 = forms.BooleanField(
-        label='Direct quotes from the audio recordings that the project takes of me can be used for subsequent publication and academic presentation.'
+        label='I consent to direct quotes captured from the audio recordings that are taken as I use my iPhone at home to capture the videos being used in publications and academic presentations.'
         )
     name = forms.CharField(
         label='',
