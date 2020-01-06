@@ -71,12 +71,10 @@ def survey(request, token):
     if request.method == 'POST':
         form = SurveyForm(request.POST)
         if form.is_valid():
-            survey_data = {
-                'participant': participant,
-                **form.cleaned_data,
-            }
-            survey = Survey(**survey_data)
-            survey.save()
+            Survey.objects.create_survey(
+                participant=participant,
+                fields=form.cleaned_data,
+                )
             return HttpResponseRedirect(reverse('survey_done'))
     else:
         form = SurveyForm()

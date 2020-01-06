@@ -136,6 +136,15 @@ STATIC_ROOT = os.environ['STATIC_ROOT']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.environ['MEDIA_ROOT']
 
+
+# PII Keys
+
+PII_KEY_PUBLIC = os.environ['PII_KEY_PUBLIC']
+PII_KEY_PRIVATE = os.environ.get('PII_KEY_PRIVATE', None)
+if PII_KEY_PRIVATE is None:
+    print('Write-only mode')
+
+
 # REST API
 # https://www.django-rest-framework.org
 
