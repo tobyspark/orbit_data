@@ -9,10 +9,14 @@ cd (mdfind -name 'Orbit-Webapp-Pilot')
 source ./env/bin/activate.fish
 set -x STATIC_ROOT (mdfind -name 'ORBITscratch')/static
 set -x MEDIA_ROOT (mdfind -name 'ORBITscratch')/media
+set -x PII_KEY_PRIVATE (cat (mdfind -name 'ORBITscratch')/keys/private.pem | string split0)
+set -x PII_KEY_PUBLIC (cat (mdfind -name 'ORBITscratch')/keys/public.pem | string split0)
 cd orbit/
 python manage.py runserver 0:8000
 ```
- 
+
+Note fish-ism `| string split0` to handle multiline var, otherwise converts newlines to list, i.e. spaces
+
 ## server / bash
 
 ```
@@ -48,6 +52,7 @@ pip3 install django-form-utils
 pip3 install django-parsley
 pip3 install djangorestframework
 pip3 install jinja2
+pip3 install pycryptodomex
 sudo apt-get install gunicorn3
 sudo apt-get install nginx
 
