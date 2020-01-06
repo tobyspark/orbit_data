@@ -26,17 +26,12 @@ def consent(request):
         if form.is_valid():
             while True:
                 try:
-                    participant = Participant(
+                    participant = Participant.objects.create_participant(
                         email=form.cleaned_data['email'],
                         name=form.cleaned_data['name'],
                     )
-                    participant.save()
                     return HttpResponseRedirect(reverse('survey', kwargs={'token': participant.survey_token}))
                 except IntegrityError as error:
-                    # Email exists. Take user back to form.
-                    if Participant.objects.filter(email=participant.email).exists():
-                        form.add_error('email', 'This email address is already taken')
-                        break
                     # ID or token exists. Try again, generating new values.
                     print(error)
                     pass
