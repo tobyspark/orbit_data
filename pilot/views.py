@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
+from django.utils.timezone import now
 from rest_framework import viewsets
-from datetime import datetime
 
 from .forms import ConsentForm, SurveyForm
 from .models import Participant, Survey, LabelledMedia
@@ -61,7 +61,8 @@ def survey(request, token):
     
     # Update the participant's survey started timestamp, enabling e.g. day later reminders.
     # TODO: Machinery for e.g. day later reminders
-    participant.survey_started = datetime.now()
+    participant.survey_started = now()
+    participant.save()
     
     if request.method == 'POST':
         form = SurveyForm(request.POST)
