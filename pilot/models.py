@@ -1,9 +1,8 @@
 from django.db import models
 from django.conf import settings
-
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import AES, PKCS1_OAEP
-from datetime import datetime
 import secrets
 import json
 
@@ -128,6 +127,14 @@ class Participant(EncryptedBlobModel):
     @property
     def survey_done(self):
         return Survey.objects.filter(participant=self).exists()
+    def __str__(self):
+        survey_status = 'Survey complete'
+        if not self.survey_done:
+            if self.survey_started is None:
+                survey_status = 'Survey not started'
+            else:
+                survey_status = f"Survey started { naturaltime(self.survey_started) }"
+        return f"Participant {self.id}. {survey_status}"
 
 
 class SurveyManager(models.Manager):
