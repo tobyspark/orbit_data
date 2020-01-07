@@ -12,6 +12,9 @@ def validate_age(value):
 
 @parsleyfy
 class ConsentForm(BetterForm):
+    '''
+    Participants complete this form to provide informed consent.
+    '''
     class Meta:
         fieldsets = [
             ('Email Address', {
@@ -90,6 +93,9 @@ class ConsentForm(BetterForm):
 
 @parsleyfy
 class SurveyForm(BetterForm):
+    '''
+    Participants complete this background survey after providing consent.
+    '''
     class Meta:
         fieldsets = [
             ('Age', {

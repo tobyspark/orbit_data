@@ -107,7 +107,7 @@ class ParticipantManager(models.Manager):
 
 class Participant(EncryptedBlobModel):
     '''
-    A study participant, with human-usable randomised ID and email, name in encrypted blob.
+    A study participant. Generates randomised ID suitable to refer to the participant throughout the research. Email, name are held in encrypted blob.
     '''
     id = models.IntegerField(
         primary_key=True,
@@ -127,6 +127,7 @@ class Participant(EncryptedBlobModel):
     @property
     def survey_done(self):
         return Survey.objects.filter(participant=self).exists()
+        
     def __str__(self):
         survey_status = 'Survey complete'
         if not self.survey_done:
@@ -153,6 +154,9 @@ class SurveyManager(models.Manager):
         
 
 class Survey(EncryptedBlobModel):
+    '''
+    The survey data completed by a participant. Held in an encrypted blob.
+    '''
     participant = models.ForeignKey(
         Participant,
         on_delete=models.CASCADE,
@@ -165,6 +169,9 @@ class Survey(EncryptedBlobModel):
 
 
 class LabelledMedia(models.Model):
+    '''
+    The participant-shot image/video, as file.
+    '''
     label = models.CharField(max_length=50)
     media = models.FileField()
     timestamp = models.DateField(auto_now_add=True)
