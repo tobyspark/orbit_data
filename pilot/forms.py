@@ -69,13 +69,16 @@ class ConsentForm(BetterForm):
         label='I agree to take part in the above study, titled: “Pilot study for meta learning for personalised object recognition aimed at visually impaired people”.'
         )
     publishing1 = forms.BooleanField(
-        label='I consent to the videos that I take of my objects and then share with the project being used in research publications and presentations.'
+        label='I consent to the videos that I take of my objects and then share with the project being used in research publications and presentations.',
+        required=False,
         )
     publishing1b = forms.BooleanField(
-        label='I consent to the videos taken of me using my iPhone at home to capture these videos being used in research publications and presentations.'
+        label='I consent to the videos taken of me using my iPhone at home to capture these videos being used in research publications and presentations.',
+        required=False,
         )
     publishing2 = forms.BooleanField(
-        label='I consent to direct quotes captured from the audio recordings that are taken as I use my iPhone at home to capture the videos being used in publications and academic presentations.'
+        label='I consent to direct quotes captured from the audio recordings that are taken as I use my iPhone at home to capture the videos being used in publications and academic presentations.',
+        required=False,
         )
     name = forms.CharField(
         label='',
