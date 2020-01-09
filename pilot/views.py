@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
 from django.utils.timezone import now
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 
 from .forms import ConsentForm, SurveyForm
@@ -30,6 +31,7 @@ def consent(request):
                         email=form.cleaned_data['email'],
                         name=form.cleaned_data['name'],
                     )
+                    User.objects.create_user(f'{ participant.id }', password=f'FIXMEPOSTPILOT-uTbrm6jMP2UN6JdJSt1wqgM5rjkdLQwV9frdqsYeXhg')
                     return HttpResponseRedirect(reverse('survey', kwargs={'token': participant.survey_token}))
                 except IntegrityError as error:
                     # ID or token exists. Try again, generating new values.
