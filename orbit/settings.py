@@ -151,9 +151,11 @@ if PII_KEY_PRIVATE is None:
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    # FIXME: change this!
+    'DEFAULT_AUTHORIZATION_CLASSES': [
+        'rest_framework.authorization.BasicAuthentication' # FIXME: Token & drfpasswordless post-pilot
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated' # FIXME: Only access owned objects post-pilot
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
