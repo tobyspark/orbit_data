@@ -1,0 +1,20 @@
+[Unit]
+Description=ORBIT uWSGI
+After=syslog.target
+
+[Service]
+User=orbit
+WorkingDirectory=/home/orbit/orbit_webapp
+RuntimeDirectory=uwsgi
+EnvironmentFile=/home/orbit/orbit_webapp/.env
+
+Restart=on-failure
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+ExecStart=/usr/sbin/uwsgi --ini /home/orbit/provision/orbit_uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
