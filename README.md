@@ -20,7 +20,13 @@ Note fish-ism `| string split0` to handle multiline var, otherwise converts newl
 ## production / bash
 
 To provision the City CentOS server –
- 
+
+1. Create self-signed SSL cert
+   ```
+   xxx...
+   /etc/nginx/ssl/smcse-orbit00_city_ac_uk.crt
+   /etc/nginx/ssl/smcse-orbit00_city_ac_uk.key
+   ```
 1. As root, create orbit user  
    ```
    adduser orbit
