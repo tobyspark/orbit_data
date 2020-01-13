@@ -83,7 +83,7 @@ pip install -r /home/orbit/orbit_webapp/provision/requirements.txt
 pip uninstall -y django
 pip install django==2.1.*
 
-set -a; source .env; set +a
+set -a; source /home/orbit/orbit_webapp/.env; set +a
 python /home/orbit/orbit_webapp/manage.py collectstatic --no-input
 
 # As root...
