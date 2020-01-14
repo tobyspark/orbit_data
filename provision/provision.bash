@@ -37,7 +37,7 @@ fi
 #   second, create desired server block in conf.d
 cat /home/orbit/orbit_webapp/provision/orbit_nginx.conf \
 | sed "s/kDOMAIN/$HOSTNAME/g" \
-| sed "s,kSOCKET,/run/uwsgi/$HOSTNAME.socket,g" \
+| sed "s,kSOCKET,127.0.0.1:29000,g" \
 | sed 's,kSTATIC,/orbit-data/pilot/static/,g' \ # Note this is hard-coded here, .env has not been read
 > /etc/nginx/conf.d/$HOSTNAME.conf
 
@@ -47,7 +47,7 @@ if [ ! -x /etc/uwsgi/apps-available ]; then
     mkdir /etc/uwsgi/apps-available
 fi
 cat /home/orbit/orbit_webapp/provision/orbit_uwsgi.ini \
-| sed "s,kSOCKET,/run/uwsgi/$HOSTNAME.socket,g" \
+| sed "s,kSOCKET,127.0.0.1:29000,g" \
 > /etc/uwsgi/apps-available/$HOSTNAME.ini
 
 # ...systemd setup
