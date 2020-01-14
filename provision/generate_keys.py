@@ -9,3 +9,7 @@ file_out.write(private_key)
 public_key = key.publickey().export_key()
 file_out = open("public.pem", "wb")
 file_out.write(public_key)
+
+public_key = key.publickey().export_key(format='OpenSSH')
+file_out = open("public.ssl", "wb")
+file_out.write(public_key)
