@@ -8,13 +8,13 @@ WorkingDirectory=/home/orbit/orbit_webapp
 RuntimeDirectory=uwsgi
 EnvironmentFile=/home/orbit/orbit_webapp/.env
 
-Restart=on-failure
+Restart=always
 KillSignal=SIGQUIT
 Type=notify
 StandardError=syslog
 NotifyAccess=all
 
-ExecStart=/usr/sbin/uwsgi --ini /home/orbit/provision/orbit_uwsgi.ini
+ExecStart=/usr/sbin/uwsgi --ini /etc/uwsgi/apps-available/smcse-orbit00.ini
 
 [Install]
 WantedBy=multi-user.target
