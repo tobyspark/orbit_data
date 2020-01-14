@@ -16,6 +16,7 @@ fi
 yum -y install nginx
 yum -y install python3
 yum -y install uwsgi
+yum -y install uwsgi-plugin-python36
 yum -y install git
 
 # Create web app data storage directory
