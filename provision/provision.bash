@@ -23,7 +23,7 @@ yum -y install git
 if [ ! -x /orbit-data/pilot/media ]; then
     mkdir /orbit-data/pilot
     mkdir /orbit-data/pilot/media
-    chown -R orbit /orbit-data/pilot
+    chown -R orbit:orbit /orbit-data/pilot
 fi
 
 # nginx setup
@@ -38,7 +38,7 @@ fi
 cat /home/orbit/orbit_webapp/provision/orbit_nginx.conf \
 | sed "s/kDOMAIN/$HOSTNAME/g" \
 | sed "s,kSOCKET,/run/uwsgi/$HOSTNAME.socket,g" \
-| sed 's,kSTATIC,/home/orbit/static,g' \
+| sed 's,kSTATIC,/orbit-data/pilot/static/,g' \ # Note this is hard-coded here, .env has not been read
 > /etc/nginx/conf.d/$HOSTNAME.conf
 
 # uwsgi setup
@@ -84,8 +84,14 @@ pip install -r /home/orbit/orbit_webapp/provision/requirements.txt
 pip uninstall -y django
 pip install django==2.1.*
 
-set -a; source /home/orbit/orbit_webapp/.env; set +a
+# Collect static files from Django apps into directory nginx will serve from
 python /home/orbit/orbit_webapp/manage.py collectstatic --no-input
+
+# Possibly not necessary, need a clean machine to check
+chown -R orbit:orbit $STATIC_ROOT
+chown -R orbit:orbit $MEDIA_ROOT
+chmod -R go-w $STATIC_ROOT
+chmod -R go-w $MEDIA_ROOT
 
 # As root...
 EOF
@@ -94,7 +100,11 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
-# Enable services, should restart on boot
+# Start services, now
+systemctl start nginx
+systemctl start uwsgi
+
+# Enable services, to resume on boot
 systemctl enable nginx
 systemctl enable uwsgi
 
