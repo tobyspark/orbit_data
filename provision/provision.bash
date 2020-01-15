@@ -26,19 +26,20 @@ if [ ! -x /orbit-data/pilot/media ]; then
     chown -R orbit:orbit /orbit-data/pilot
 fi
 
-# nginx setup
-#   first, remove server blocks from master nginx.conf
+# NGINX setup
+#   First, remove server blocks from master nginx.conf
 #   this is based on nginx.conf as found, fragile.
 #   original conf file should be preserved as nginx.conf.bak
 if grep --regex='^    server {' /etc/nginx/nginx.conf; then
     sed -i.bak -e '/^    server {/,$d' /etc/nginx/nginx.conf # strip everything from server onwards
     echo "}" >> /etc/nginx/nginx.conf # add closing bracket back in
 fi
-#   second, create desired server block in conf.d
+#   Second, create desired server block in conf.d
+#   Note the socket is hard-coded here, .env has not been read
 cat /home/orbit/orbit_webapp/provision/orbit_nginx.conf \
 | sed "s/kDOMAIN/$HOSTNAME/g" \
 | sed "s,kSOCKET,127.0.0.1:29000,g" \
-| sed 's,kSTATIC,/orbit-data/pilot/static/,g' \ # Note this is hard-coded here, .env has not been read
+| sed 's,kSTATIC,/orbit-data/pilot/static/,g' \
 > /etc/nginx/conf.d/$HOSTNAME.conf
 
 # uwsgi setup
