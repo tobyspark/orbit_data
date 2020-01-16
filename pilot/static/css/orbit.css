@@ -51,6 +51,11 @@ section > header {
     margin-bottom: 1em;
 }
 
+section > header > img {
+    padding-left: 1em;
+    padding-top: 0.25em;
+}
+
 section > div {
     width: 64%;
     min-height: 2em;
@@ -181,6 +186,11 @@ form ul > li > ul { /* Radio button set */
     
     section > header span[aria-hidden="true"]::after {
         content: " —"
+    }
+    
+    section > header > img {
+        padding: unset;
+        margin: 0 50% 1em 0;
     }
 
     section > div {
