@@ -54,6 +54,7 @@ section > header {
 section > header > img {
     padding-left: 1em;
     padding-top: 0.25em;
+    max-height: 6em;
 }
 
 section > div {
@@ -191,6 +192,7 @@ form ul > li > ul { /* Radio button set */
     section > header > img {
         padding: unset;
         margin: 0 50% 1em 0;
+        max-height: unset;
     }
 
     section > div {
