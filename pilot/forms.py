@@ -8,7 +8,6 @@ from orbit.fields import GenderField
 def validate_age(value):
     if value < 20: raise ValidationError('Age too young')
     if value > 100: raise ValidationError('Age too old')
-    if value % 5 != 0: raise ValidationError('Age not rounded to nearest five-years')
 
 @parsleyfy
 class ConsentForm(BetterForm):
@@ -161,7 +160,6 @@ class SurveyForm(BetterForm):
         label='',
         validators=[validate_age],
         widget=forms.NumberInput(attrs={
-            'step': '5',
             'min': '20',
             'max': '100',
             'placeholder': '20, 25, 30, ...',
