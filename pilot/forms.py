@@ -50,7 +50,7 @@ class ConsentForm(BetterForm):
             }),
         )
     consent1 = forms.BooleanField(
-        label='I confirm that I have read and understood the participant information dated [INSERT DATE AND VERSION NUMBER] for the above study. I have had the opportunity to consider the information and ask questions which have been answered satisfactorily.'
+        label='I confirm that I have read and understood the participant information dated 16th January 2020, v01 for the above study. I have had the opportunity to consider the information and ask questions which have been answered satisfactorily.'
         )
     consent2 = forms.BooleanField(
         label='During the home visit, I agree to my conversation with the researcher being video recorded.'
@@ -134,7 +134,7 @@ class SurveyForm(BetterForm):
                     'accessibility_more',
                     ]}),
             ('Apps', {
-                'description': 'Do you use any of these apps? We are interested in apps that help you ‘see’ your surroundings in some way.',
+                'description': 'Do you use any of these apps? We are interested in apps that make visual information accessible to you.',
                 'fields': [
                     'apps_taptapsee',
                     'apps_bemyeyes',
