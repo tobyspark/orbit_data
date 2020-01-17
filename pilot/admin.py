@@ -13,7 +13,15 @@ class ParticipantAdmin(admin.ModelAdmin):
     actions = ['export']
  
     def export(self, request, queryset):
-        data = { item.id: item.decrypt() for item in queryset }
+        data = {
+            item.id: {
+                **item.decrypt(),
+                'publishing_videos': item.publishing_videos,
+                'publishing_recordings': item.publishing_recordings,
+                'publishing_quotes': item.publishing_quotes,
+                } for item in queryset
+        }
+        
         return HttpResponse(
             json.dumps(data),
             content_type="application/json",
