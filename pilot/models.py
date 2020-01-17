@@ -90,19 +90,23 @@ class EncryptedBlobModel(models.Model):
 
 
 class ParticipantManager(models.Manager):
-    def create_participant(self, email, name):
+    def create_participant(self, pii_email, pii_name, fields):
         '''
-        Create and save a participant record, encrypting the supplied fields as a binary blob.
+        Create and save a participant record, encrypting the PII fields as a binary blob.
         '''
-        # Transform email and name into bytes
+        # Transform email and name into bytes for encryption
         info = {
-            'email': email,
-            'name': name,
+            'email': pii_email,
+            'name': pii_name,
         }
         data = json.dumps(info).encode('utf-8')
         
+        # Get desired fields from supplied
+        keys = ['publishing_videos', 'publishing_recordings', 'publishing_quotes']
+        desired_fields = { k: v for k, v in fields.items() if k in keys}
+        
         # Encrypt and create
-        return self.create(**encrypt(data))
+        return self.create(**encrypt(data), **desired_fields)
 
 
 class Participant(EncryptedBlobModel):
@@ -112,6 +116,12 @@ class Participant(EncryptedBlobModel):
     id = models.IntegerField(
         primary_key=True,
         default=mint_id,
+        )
+    publishing_videos = models.BooleanField(
+        )
+    publishing_recordings = models.BooleanField(
+        )
+    publishing_quotes = models.BooleanField(
         )
     survey_started = models.DateTimeField(
         null=True,
@@ -139,12 +149,12 @@ class Participant(EncryptedBlobModel):
 
 
 class SurveyManager(models.Manager):
-    def create_survey(self, participant, fields):
+    def create_survey(self, participant, pii_fields):
         '''
         Create and save a survey record, encrypting the supplied fields as a binary blob.
         '''
         # Transform survey data (a dict) into bytes
-        data = json.dumps(fields).encode('utf-8')
+        data = json.dumps(pii_fields).encode('utf-8')
         
         # Encrypt and create
         return self.create(

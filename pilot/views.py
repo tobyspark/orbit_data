@@ -28,8 +28,9 @@ def consent(request):
             while True:
                 try:
                     participant = Participant.objects.create_participant(
-                        email=form.cleaned_data['email'],
-                        name=form.cleaned_data['name'],
+                        pii_email=form.cleaned_data.pop('email'),
+                        pii_name=form.cleaned_data.pop('name'),
+                        fields=form.cleaned_data,
                     )
                     User.objects.create_user(f'{ participant.id }', password=f'FIXMEPOSTPILOT-uTbrm6jMP2UN6JdJSt1wqgM5rjkdLQwV9frdqsYeXhg')
                     return HttpResponseRedirect(reverse('survey', kwargs={'token': participant.survey_token}))
@@ -71,7 +72,7 @@ def survey(request, token):
         if form.is_valid():
             Survey.objects.create_survey(
                 participant=participant,
-                fields=form.cleaned_data,
+                pii_fields=form.cleaned_data,
                 )
             return HttpResponseRedirect(reverse('survey_done'))
     else:
