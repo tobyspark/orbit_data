@@ -5,4 +5,4 @@ from .models import LabelledMedia
 class LabelledMediaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LabelledMedia
-        fields = ['label', 'media']
+        fields = ['label', 'media', 'participant']
