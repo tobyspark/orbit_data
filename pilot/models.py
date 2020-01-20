@@ -184,4 +184,8 @@ class LabelledMedia(models.Model):
     '''
     label = models.CharField(max_length=50)
     media = models.FileField()
+    participant = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        )
     timestamp = models.DateField(auto_now_add=True)
