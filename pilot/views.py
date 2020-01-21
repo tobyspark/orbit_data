@@ -93,3 +93,7 @@ class LabelledMediaViewSet(viewsets.ModelViewSet):
     """
     queryset = LabelledMedia.objects.all().order_by('-timestamp')
     serializer_class = LabelledMediaSerializer
+    
+    def perform_create(self, serializer):
+        participant = Participant.objects.get(id=self.request.user.username)
+        serializer.save(participant=participant)
