@@ -46,6 +46,7 @@ class ParticipantAdmin(admin.ModelAdmin):
             json.dumps({d.pop('id'): d for d in (self.datum(item) for item in queryset)}),
             content_type="application/json",
             )
+    export_json.short_description = "Export JSON"
             
     def export_csv(self, request, queryset):
         '''
@@ -63,6 +64,7 @@ class ParticipantAdmin(admin.ModelAdmin):
             writer.writerow([datum[x] for x in headers])
     
         return response
+    export_csv.short_description = "Export CSV"
         
     def export_html(self, request, queryset):
         '''
@@ -77,6 +79,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         form = ConsentForm({**datum, **req_consents})
         form.is_valid()
         return render(request, 'pilot/consent.html', {'form': form})
+    export_html.short_description = 'Show consent page'
 
 admin.site.register(Participant, ParticipantAdmin)
 
@@ -100,6 +103,7 @@ class SurveyAdmin(admin.ModelAdmin):
             json.dumps({d.pop('id'): d for d in (self.datum(item) for item in queryset)}),
             content_type="application/json",
             )
+    export_json.short_description = "Export JSON"
     
     def export_csv(self, request, queryset):
         '''
@@ -117,6 +121,7 @@ class SurveyAdmin(admin.ModelAdmin):
             writer.writerow([datum[x] for x in headers])
     
         return response
+    export_csv.short_description = "Export CSV"
         
     def export_html(self, request, queryset):
         '''
@@ -126,5 +131,6 @@ class SurveyAdmin(admin.ModelAdmin):
         form = SurveyForm(self.datum(queryset[0]))
         form.is_valid() # FIXME: Fails on gender!?
         return render(request, 'pilot/survey.html', {'form': form})
+    export_html.short_description = 'Show survey page'
 
 admin.site.register(Survey, SurveyAdmin)
