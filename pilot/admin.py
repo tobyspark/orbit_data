@@ -91,7 +91,7 @@ class SurveyAdmin(admin.ModelAdmin):
     
     def datum(self, item):
         return {
-            'id': item.id,
+            'id': item.participant.id,
             **item.decrypt(),
                }
     
