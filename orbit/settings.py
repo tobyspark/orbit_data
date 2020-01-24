@@ -82,6 +82,7 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 WSGI_APPLICATION = 'orbit.wsgi.application'
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1048576
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
