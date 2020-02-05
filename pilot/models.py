@@ -187,8 +187,15 @@ class LabelledMedia(models.Model):
         ('R', 'Rotate'),
         ('Z', 'Zoom'),
     )
+    VALIDATION = (
+        ('-', 'Unvalidated'),
+        ('P', 'Reject: video shows PII'),
+        ('I', 'Reject: video inappropriate'),
+        ('C', 'Video is clean'),
+    )
     label = models.CharField(max_length=50)
     technique = models.CharField(max_length=1, choices=TECHNIQUES, default='N')
+    validation = models.CharField(max_length=1, choices=VALIDATION, default='-')
     media = models.FileField()
     participant = models.ForeignKey(
         Participant,
