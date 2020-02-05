@@ -4,7 +4,8 @@ from .models import LabelledMedia
 
 class LabelledMediaSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
+    timestamp = serializers.ReadOnlyField()
         
     class Meta:
         model = LabelledMedia
-        fields = ['id', 'label', 'media']
+        fields = ['id', 'timestamp', 'label', 'media']
