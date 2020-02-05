@@ -204,6 +204,9 @@ class LabelledMedia(models.Model):
         on_delete=models.CASCADE,
         )
     timestamp = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"P{self.participant.id}: {self.label}/{self.get_technique_display()}. {self.get_validation_display()}"
 
 @receiver(models.signals.post_delete, sender=LabelledMedia)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
