@@ -182,7 +182,13 @@ class LabelledMedia(models.Model):
     '''
     The participant-shot image/video, as file.
     '''
+    TECHNIQUES = (
+        ('N', 'No technique'),
+        ('R', 'Rotate'),
+        ('Z', 'Zoom'),
+    )
     label = models.CharField(max_length=50)
+    technique = models.CharField(max_length=1, choices=TECHNIQUES, default='N')
     media = models.FileField()
     participant = models.ForeignKey(
         Participant,
