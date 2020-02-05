@@ -1,10 +1,12 @@
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import AES, PKCS1_OAEP
 import secrets
 import json
+import os
 
 from orbit.fields import GenderField
 
@@ -202,3 +204,36 @@ class LabelledMedia(models.Model):
         on_delete=models.CASCADE,
         )
     timestamp = models.DateField(auto_now_add=True)
+
+@receiver(models.signals.post_delete, sender=LabelledMedia)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    '''
+    Deletes file when corresponding `LabelledMedia` object is deleted.
+    '''
+    if instance.media:
+        try:
+            os.remove(instance.media.path)
+        except FileNotFoundError:
+            # TODO: Logging
+            print(f'In LabelledMedia post_delete, could not delete {instance.media.path}')
+
+@receiver(models.signals.pre_save, sender=LabelledMedia)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    '''
+    Deletes old file when corresponding `LabelledMedia` object is updated with new file.
+    '''
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = LabelledMedia.objects.get(pk=instance.pk).media
+    except LabelledMedia.DoesNotExist:
+        return False
+
+    new_file = instance.media
+    if not old_file == new_file:
+        try:
+            os.remove(old_file.path)
+        except FileNotFoundError:
+            # TODO: Logging
+            print(f'In LabelledMedia pre_save, could not delete {instance.media.path}')
