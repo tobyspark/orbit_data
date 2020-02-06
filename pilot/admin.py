@@ -92,6 +92,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                 [
                     ZIP_PATH,
                     '-r',
+                    '--compression-method', 'store', # no point in trying to compress mp4 files
                     export_zip_path,
                     archive_name,
                 ],
