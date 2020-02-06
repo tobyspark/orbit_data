@@ -3,9 +3,13 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import json
 import csv
+import os
+import subprocess
 
 from .models import LabelledMedia, Participant, Survey
 from .forms import ConsentForm, SurveyForm
+
+FFMPEG_PATH = '/usr/local/bin/ffmpeg' # FIXME: Platform/machine specific
 
 def headers_from_form(form_class, first_headers):
     '''
@@ -20,7 +24,37 @@ def headers_from_form(form_class, first_headers):
         headers.insert(0, header)
     return headers
 
-admin.site.register(LabelledMedia)
+class LabelledMediaAdmin(admin.ModelAdmin):
+    '''
+    Provides export actions needed by research team.
+    '''
+    actions = ['export_zip']
+    
+    def export_zip(self, request, queryset):
+        '''
+        Return a zip file of anonymised videos with catalogue file
+        '''
+        target_paths = []
+        for item in queryset:
+            source_path = item.media.path
+            target_path = f'{ os.path.splitext(source_path)[0] }_strip.mp4'
+            print(source_path, target_path)
+
+            result = subprocess.run([
+                FFMPEG_PATH,
+                '-i', source_path,
+                '-vcodec', 'copy',
+                '-an',
+                target_path
+                ])
+            if result.returncode == 0:
+                target_paths.append(target_path)
+            else:
+                # Handle export failure
+                print('uh-oh')
+                pass
+
+admin.site.register(LabelledMedia, LabelledMediaAdmin)
 
 class ParticipantAdmin(admin.ModelAdmin):
     '''
