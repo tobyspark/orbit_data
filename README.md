@@ -7,25 +7,32 @@
 ```
 cd (mdfind -name 'Orbit-Webapp-Pilot')
 source ./env/bin/activate.fish
-set -x STATIC_ROOT (mdfind -name 'ORBITscratch')/static
-set -x MEDIA_ROOT (mdfind -name 'ORBITscratch')/media
-set -x PII_KEY_PRIVATE (cat (mdfind -name 'ORBITscratch')/keys/private.pem | string split0)
-set -x PII_KEY_PUBLIC (cat (mdfind -name 'ORBITscratch')/keys/public.pem | string split0)
+set -x STATIC_ROOT /Volumes/ORBIT\ Data/static
+set -x MEDIA_ROOT /Volumes/ORBIT\ Data/media
+set -x PII_KEY_PUBLIC (cat /Volumes/ORBIT\ Keys/orbit-pii-public.pem | string split0)
+set -x PII_KEY_PRIVATE (cat /Volumes/ORBIT\ Keys/orbit-pii-private.pem  | string split0)
 cd orbit/
 python manage.py runserver 0:8000
 ```
 
 Note fish-ism `| string split0` to handle multiline var, otherwise converts newlines to list, i.e. spaces
 
+
+For HTTPS only ngrok –
+```
+./ngrok http --bind-tls=true 8000
+```
+
 ## production / bash
 
 To provision the City CentOS server –
 
-1. Create self-signed SSL cert
+1. Get SSL cert and add to `orbit_nginx.conf` e.g.
    ```
-   xxx...
-   /etc/nginx/ssl/smcse-orbit00_city_ac_uk.crt
-   /etc/nginx/ssl/smcse-orbit00_city_ac_uk.key
+   server {
+       listen 443 ssl;
+       ssl_certificate /etc/nginx/ssl/smcse-orbit00_city_ac_uk.crt;
+       ssl_certificate_key /etc/nginx/ssl/smcse-orbit00_city_ac_uk.key;
    ```
 1. As root, create orbit user  
    ```
