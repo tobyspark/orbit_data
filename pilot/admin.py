@@ -1,15 +1,21 @@
 from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.conf import settings
 import json
 import csv
+import datetime
 import os
+import secrets
+import string
 import subprocess
+import tempfile
 
 from .models import LabelledMedia, Participant, Survey
 from .forms import ConsentForm, SurveyForm
 
 FFMPEG_PATH = '/usr/local/bin/ffmpeg' # FIXME: Platform/machine specific
+ZIP_PATH = '/usr/bin/zip' # FIXME: Platform/machine specific
 
 def headers_from_form(form_class, first_headers):
     '''
@@ -34,25 +40,56 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         '''
         Return a zip file of anonymised videos with catalogue file
         '''
-        target_paths = []
-        for item in queryset:
-            source_path = item.media.path
-            target_path = f'{ os.path.splitext(source_path)[0] }_strip.mp4'
-            print(source_path, target_path)
-
+        # # Create password for exported zip
+        # with open('/usr/share/dict/words') as f:
+        #     words = [word.strip() for word in f]
+        #     password = '-'.join(secrets.choice(words) for i in range(4))
+        
+        # Create a temporary directory, to then zip up as export file
+        with tempfile.TemporaryDirectory() as tmpdir:
+            index_data = {}
+            
+            # Process media objects
+            for item in queryset:
+                # Export videos into temporary directory
+                anon_name = f"{ ''.join(secrets.choice(string.ascii_lowercase) for _ in range(10)) }.mp4"
+                result = subprocess.run([
+                    FFMPEG_PATH,
+                    '-i', item.media.path,
+                    '-vcodec', 'copy',
+                    '-an',
+                    os.path.join(tmpdir, anon_name)
+                    ])
+                if result.returncode != 0:
+                    # Handle export failure
+                    print('FFmpeg failure on { item }')
+                    continue
+                
+                # Add to index
+                (
+                    index_data
+                    .setdefault(item.participant.id, {})
+                    .setdefault(item.label, {})
+                    .setdefault(item.get_technique_display(), [])
+                    .append(anon_name)
+                )
+                
+            # Create index file
+            with open(os.path.join(tmpdir, 'orbit_pilot_dataset.json'), mode='xt') as index_file:
+                json.dump(index_data, index_file)
+            
+            # Zip this directory up
+            # GAH#1: Can't supply encryption password without being on tty
+            # GAH#2: Win10 afaik can't extract any decently encrypted, portable folder archive
+            export_zip_path = os.path.join(settings.MEDIA_ROOT, f"orbit_ml_dataset_export_{ datetime.datetime.now().strftime('%Y-%m-%d') }.zip")
             result = subprocess.run([
-                FFMPEG_PATH,
-                '-i', source_path,
-                '-vcodec', 'copy',
-                '-an',
-                target_path
+                ZIP_PATH,
+                '-r',
+                export_zip_path,
+                tmpdir
                 ])
-            if result.returncode == 0:
-                target_paths.append(target_path)
-            else:
-                # Handle export failure
-                print('uh-oh')
-                pass
+            
+            self.message_user(request, f"{ 'Successfully' if result.returncode == 0 else 'Unsuccessfully' } exported zip to { export_zip_path }")
 
 admin.site.register(LabelledMedia, LabelledMediaAdmin)
 
