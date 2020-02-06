@@ -40,6 +40,10 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         '''
         Return a zip file of anonymised videos with catalogue file
         '''
+        archive_name = f"orbit_ml_dataset_export_{ datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') }"
+        
+        # TODO: Only export verified media objects
+        
         # # Create password for exported zip
         # with open('/usr/share/dict/words') as f:
         #     words = [word.strip() for word in f]
@@ -48,6 +52,8 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         # Create a temporary directory, to then zip up as export file
         with tempfile.TemporaryDirectory() as tmpdir:
             index_data = {}
+            
+            os.mkdir(os.path.join(tmpdir, archive_name))
             
             # Process media objects
             for item in queryset:
@@ -58,7 +64,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                     '-i', item.media.path,
                     '-vcodec', 'copy',
                     '-an',
-                    os.path.join(tmpdir, anon_name)
+                    os.path.join(tmpdir, archive_name, anon_name)
                     ])
                 if result.returncode != 0:
                     # Handle export failure
@@ -75,19 +81,22 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                 )
                 
             # Create index file
-            with open(os.path.join(tmpdir, 'orbit_pilot_dataset.json'), mode='xt') as index_file:
+            with open(os.path.join(tmpdir, archive_name, 'orbit_pilot_dataset.json'), mode='xt') as index_file:
                 json.dump(index_data, index_file)
             
             # Zip this directory up
             # GAH#1: Can't supply encryption password without being on tty
             # GAH#2: Win10 afaik can't extract any decently encrypted, portable folder archive
-            export_zip_path = os.path.join(settings.MEDIA_ROOT, f"orbit_ml_dataset_export_{ datetime.datetime.now().strftime('%Y-%m-%d') }.zip")
-            result = subprocess.run([
-                ZIP_PATH,
-                '-r',
-                export_zip_path,
-                tmpdir
-                ])
+            export_zip_path = os.path.join(settings.MEDIA_ROOT, f'{ archive_name }.zip')
+            result = subprocess.run(
+                [
+                    ZIP_PATH,
+                    '-r',
+                    export_zip_path,
+                    archive_name,
+                ],
+                cwd=tmpdir
+            )
             
             self.message_user(request, f"{ 'Successfully' if result.returncode == 0 else 'Unsuccessfully' } exported zip to { export_zip_path }")
 
