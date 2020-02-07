@@ -110,6 +110,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             )
             
             self.message_user(request, f"{ 'Successfully' if result.returncode == 0 else 'Unsuccessfully' } exported zip to { export_zip_path }")
+    export_zip.short_description = "Export ZIP"
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
