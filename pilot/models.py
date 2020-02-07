@@ -182,6 +182,20 @@ class Survey(EncryptedBlobModel):
     def __str__(self):
         return f"Survey for Participant {self.participant.id}"
 
+class Label(models.Model):
+    '''
+    The (possibly researcher re-written) label to be used for a set of LabelledMedia objects
+    '''
+    label = models.CharField(max_length=50)
+    validated = models.BooleanField(default=False)
+    
+    @property
+    def media_count(self):
+        return self.labelledmedia_set.count()
+    
+    def __str__(self):
+        return f"{ self.label } [{ self.media_count }]"
+    
 
 class LabelledMedia(models.Model):
     '''
@@ -198,7 +212,12 @@ class LabelledMedia(models.Model):
         ('I', 'Reject: video inappropriate'),
         ('C', 'Video is clean'),
     )
-    label = models.CharField(max_length=50)
+    label_original = models.CharField(max_length=50)
+    label_validated = models.ForeignKey(
+        Label,
+        null=True,
+        on_delete=models.SET_NULL,
+        )
     technique = models.CharField(max_length=1, choices=TECHNIQUES, default='N')
     validation = models.CharField(max_length=1, choices=VALIDATION, default='-')
     media = models.FileField()
@@ -207,6 +226,10 @@ class LabelledMedia(models.Model):
         on_delete=models.CASCADE,
         )
     timestamp = models.DateField(auto_now_add=True)
+    
+    @property
+    def label(self):
+        return self.label_validated.label if self.label_validated else f"Original: { self.label_original }"
     
     def __str__(self):
         return f"P{self.participant.id}: {self.label}/{self.get_technique_display()}. {self.get_validation_display()}"
