@@ -11,7 +11,7 @@ import string
 import subprocess
 import tempfile
 
-from .models import LabelledMedia, Participant, Survey
+from .models import Label, LabelledMedia, Participant, Survey
 from .forms import ConsentForm, SurveyForm
 
 FFMPEG_PATH = '/usr/local/bin/ffmpeg' # FIXME: Platform/machine specific
@@ -32,6 +32,18 @@ def headers_from_form(form_class, first_headers):
             pass # first_headers can contain headers to add
         headers.insert(0, header)
     return headers
+
+@admin.register(Label)
+class LabelAdmin(admin.ModelAdmin):
+    '''
+    ...will it do anything beyond ModelAdmin for the Label model?
+    '''
+    list_display = (
+        'label',
+        'validated',
+        'media_count',
+        )
+
 
 @admin.register(LabelledMedia)
 class LabelledMediaAdmin(admin.ModelAdmin):
