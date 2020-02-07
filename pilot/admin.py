@@ -33,6 +33,7 @@ def headers_from_form(form_class, first_headers):
         headers.insert(0, header)
     return headers
 
+@admin.register(LabelledMedia)
 class LabelledMediaAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team.
@@ -110,8 +111,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             
             self.message_user(request, f"{ 'Successfully' if result.returncode == 0 else 'Unsuccessfully' } exported zip to { export_zip_path }")
 
-admin.site.register(LabelledMedia, LabelledMediaAdmin)
-
+@admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
@@ -172,8 +172,8 @@ class ParticipantAdmin(admin.ModelAdmin):
         return render(request, 'pilot/consent.html', {'form': form})
     export_html.short_description = 'Show consent page'
 
-admin.site.register(Participant, ParticipantAdmin)
 
+@admin.register(Survey)
 class SurveyAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
@@ -223,5 +223,3 @@ class SurveyAdmin(admin.ModelAdmin):
         form.is_valid() # FIXME: Fails on gender!?
         return render(request, 'pilot/survey.html', {'form': form})
     export_html.short_description = 'Show survey page'
-
-admin.site.register(Survey, SurveyAdmin)
