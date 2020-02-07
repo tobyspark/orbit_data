@@ -17,6 +17,9 @@ from .forms import ConsentForm, SurveyForm
 FFMPEG_PATH = '/usr/local/bin/ffmpeg' # FIXME: Platform/machine specific
 ZIP_PATH = '/usr/bin/zip' # FIXME: Platform/machine specific
 
+admin.site.site_header = "ORBIT Data"
+admin.site.site_title = "ORBIT Data"
+
 def headers_from_form(form_class, first_headers):
     '''
     Extract headers from form, ensuring order starts with first_headers, adding headers if necessary
