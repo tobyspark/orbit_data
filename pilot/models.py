@@ -139,15 +139,18 @@ class Participant(EncryptedBlobModel):
     @property
     def survey_done(self):
         return Survey.objects.filter(participant=self).exists()
-        
-    def __str__(self):
+    
+    def survey_description(self):
         survey_status = 'Survey complete'
         if not self.survey_done:
             if self.survey_started is None:
                 survey_status = 'Survey not started'
             else:
                 survey_status = f"Survey started { naturaltime(self.survey_started) }"
-        return f"Participant {self.id}. {survey_status}"
+        return survey_status
+    
+    def __str__(self):
+        return f"P{self.id}"
 
 
 class SurveyManager(models.Manager):

@@ -114,6 +114,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
     '''
     actions = ['export_json', 'export_csv', 'export_html']
+    list_display = ('id', 'survey_description')
     
     def datum(self, item):
         return {
