@@ -35,6 +35,12 @@ class LabelledMediaAdmin(admin.ModelAdmin):
     Provides export actions needed by research team.
     '''
     actions = ['export_zip']
+    list_display = (
+        'label',
+        'technique',
+        'validation',
+        'participant',
+        )
     
     def export_zip(self, request, queryset):
         '''
