@@ -41,7 +41,6 @@ class LabelAdmin(admin.ModelAdmin):
     '''
     list_display = (
         'label',
-        'validated',
         'media_count',
         )
 
