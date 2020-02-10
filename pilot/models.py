@@ -187,7 +187,6 @@ class Label(models.Model):
     The (possibly researcher re-written) label to be used for a set of LabelledMedia objects
     '''
     label = models.CharField(max_length=50)
-    validated = models.BooleanField(default=False)
     
     @property
     def media_count(self):
