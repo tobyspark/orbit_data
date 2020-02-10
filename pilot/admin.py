@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from django.conf import settings
+from django.urls import path
 import json
 import csv
 import datetime
@@ -58,7 +59,14 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         'participant',
         )
     
-    def export_zip(self, request, queryset):
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('export-zip/', self.admin_site.admin_view(self.export_zip))
+        ]
+        return my_urls + urls
+    
+    def export_zip(self, request, queryset=LabelledMedia.objects.filter(validation='C')):
         '''
         Return a zip file of anonymised videos with catalogue file
         '''
