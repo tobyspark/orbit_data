@@ -1,5 +1,5 @@
-from django.contrib import admin
-from django.http import HttpResponse
+from django.contrib import admin, messages
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from django.conf import settings
 import json
@@ -73,6 +73,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         
         # Create a temporary directory, to then zip up as export file
         with tempfile.TemporaryDirectory() as tmpdir:
+            errors = []
             index_data = {}
             
             os.mkdir(os.path.join(tmpdir, archive_name))
@@ -90,7 +91,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                     ])
                 if result.returncode != 0:
                     # Handle export failure
-                    print('FFmpeg failure on { item }')
+                    errors.append(f'FFmpeg failure on { item }')
                     continue
                 
                 # Add to index
@@ -109,7 +110,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             # Zip this directory up
             # GAH#1: Can't supply encryption password without being on tty
             # GAH#2: Win10 afaik can't extract any decently encrypted, portable folder archive
-            export_zip_path = os.path.join(settings.MEDIA_ROOT, f'{ archive_name }.zip')
+            export_zip_path = os.path.join(tmpdir, f'{ archive_name }.zip')
             result = subprocess.run(
                 [
                     ZIP_PATH,
@@ -120,8 +121,20 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                 ],
                 cwd=tmpdir
             )
+            if result.returncode != 0:
+                errors.append('Zip failure')
             
-            self.message_user(request, f"{ 'Successfully' if result.returncode == 0 else 'Unsuccessfully' } exported zip to { export_zip_path }")
+            # Report any errors
+            if errors:
+                self.message_user(request, '; '.join(errors), level=messages.WARNING) # This won't be displayed until page reload, natch
+                # TODO: Logging
+
+            # Return the zip as a download
+            return FileResponse(
+                open(export_zip_path, 'rb'),
+                as_attachment=True,
+                filename=f'{ archive_name }.zip',
+                )
     export_zip.short_description = "Export ZIP"
 
 @admin.register(Participant)
