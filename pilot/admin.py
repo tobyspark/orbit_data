@@ -89,13 +89,20 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             for item in queryset:
                 # Export videos into temporary directory
                 anon_name = f"{ ''.join(secrets.choice(string.ascii_lowercase) for _ in range(10)) }.mp4"
-                result = subprocess.run([
-                    FFMPEG_PATH,
+                command = [FFMPEG_PATH]
+                if item.in_time:
+                    # FFmpeg seeking information - must read
+                    # https://trac.ffmpeg.org/wiki/Seeking
+                    command += ['-ss', f'{item.in_time}']
+                if item.out_time:
+                    command += ['-to', f'{item.out_time}']
+                command += [
                     '-i', item.media.path,
                     '-vcodec', 'copy',
                     '-an',
-                    os.path.join(tmpdir, archive_name, anon_name)
-                    ])
+                    ]
+                command += [os.path.join(tmpdir, archive_name, anon_name)]
+                result = subprocess.run(command)
                 if result.returncode != 0:
                     # Handle export failure
                     errors.append(f'FFmpeg failure on { item }')
