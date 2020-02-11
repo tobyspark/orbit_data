@@ -86,15 +86,8 @@ class LabelledMediaAdmin(admin.ModelAdmin):
         Return a zip file of anonymised videos with catalogue file
         '''
         archive_name = f"orbit_ml_dataset_export_{ datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') }"
-        
-        # TODO: Only export verified media objects
-        
-        # # Create password for exported zip
-        # with open('/usr/share/dict/words') as f:
-        #     words = [word.strip() for word in f]
-        #     password = '-'.join(secrets.choice(words) for i in range(4))
-        
-        # Create a temporary directory, to then zip up as export file
+                
+        # Create a temporary directory, to hold export directory and zip of that directory
         with tempfile.TemporaryDirectory() as tmpdir:
             errors = []
             index_data = {}
@@ -105,7 +98,10 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             for item in queryset:
                 # Export videos into temporary directory
                 anon_name = f"{ ''.join(secrets.choice(string.ascii_lowercase) for _ in range(10)) }.mp4"
-                command = [FFMPEG_PATH]
+                command = [
+                    FFMPEG_PATH,
+                    '-loglevel', 'error',
+                    ]
                 if item.in_time:
                     # FFmpeg seeking information - must read
                     # https://trac.ffmpeg.org/wiki/Seeking
@@ -120,7 +116,6 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                 command += [os.path.join(tmpdir, archive_name, anon_name)]
                 result = subprocess.run(command)
                 if result.returncode != 0:
-                    # Handle export failure
                     errors.append(f'FFmpeg failure on { item }')
                     continue
                 
@@ -146,8 +141,9 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                     ZIP_PATH,
                     '-r',
                     '--compression-method', 'store', # no point in trying to compress mp4 files
+                    '--quiet',
                     export_zip_path,
-                    archive_name,
+                    archive_name, # relative path for zip sanity, enabled by setting cwd to tmpdir
                 ],
                 cwd=tmpdir
             )
