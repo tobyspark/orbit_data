@@ -225,6 +225,8 @@ class LabelledMedia(models.Model):
         on_delete=models.CASCADE,
         )
     timestamp = models.DateField(auto_now_add=True)
+    in_time = models.DecimalField(null=True, blank=True, max_digits=4, decimal_places=2)
+    out_time = models.DecimalField(null=True, blank=True, max_digits=4, decimal_places=2)
     
     @property
     def label(self):
