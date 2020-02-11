@@ -3,6 +3,7 @@ from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import path
+from django.db.models import Count
 import json
 import csv
 import datetime
@@ -50,7 +51,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team.
     '''
-    actions = ['export_csv', 'export_zip']
+    actions = ['export_csv', 'export_zip', 'merge_labels']
     list_display = (
         'label',
         'technique',
@@ -162,6 +163,45 @@ class LabelledMediaAdmin(admin.ModelAdmin):
                 filename=f'{ archive_name }.zip',
                 )
     export_zip.short_description = "Export ZIP"
+    
+    def merge_labels(self, request, queryset):
+        '''
+        Detect any LabelledMedia that have the same label and participant, and create a single Label for them
+        This may be no label_validated and identical label_original strings, or many label_validated objects with same labels.
+        '''
+        index_data = {}
+        for item in queryset:
+            (
+                index_data
+                .setdefault(item.participant.id, {})
+                .setdefault(item.label, [])
+                .append(item)
+            )
+        for participant_group in index_data.values():
+            for label_group in participant_group.values():
+                # Get or create Label object
+                message = f'P{ label_group[0].participant.id }: '
+                label = label_group[0].label_validated
+                if label is None:
+                    label = Label.objects.create(label=label_group[0].label_original)
+                    message += 'created '
+                message += f"label '{ label.label }' ({ label.id }); "
+                # Update all instances within this label group to have that label
+                has_changed = False
+                for item in label_group:
+                    if item.label_validated != label:
+                        if item.label_validated is not None:
+                            message += f'deleting duplicate label ({item.label_validated.id}); '
+                            item.label_validated.delete()
+                        message += 'assigning label; '
+                        item.label_validated = label
+                        item.save()
+                        has_changed = True
+                if has_changed:
+                    self.message_user(request, message[:-2] + '.')
+        # Remove any zombie labels
+        del_info = Label.objects.annotate(count=Count('labelledmedia')).filter(count=0).delete()
+        self.message_user(request, f'Deleted { del_info[0] } labels not linked to any media')
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
