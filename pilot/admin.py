@@ -50,7 +50,7 @@ class LabelledMediaAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team.
     '''
-    actions = ['export_zip']
+    actions = ['export_csv', 'export_zip']
     list_display = (
         'label',
         'technique',
@@ -64,6 +64,22 @@ class LabelledMediaAdmin(admin.ModelAdmin):
             path('export-zip/', self.admin_site.admin_view(self.export_zip))
         ]
         return my_urls + urls
+    
+    def export_csv(self, request, queryset):
+        '''
+        Return a CSV file of LabelledMedia info suitable for import into Excel
+        '''
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="orbit_labelledmedia.csv"'
+        
+        headers = ['Participant', 'Label', 'Technique']
+        
+        writer = csv.writer(response)
+        writer.writerow(headers)
+        for item in queryset:
+            writer.writerow([item.participant.id, item.label, item.get_technique_display()])
+        return response
+    export_csv.short_description = "Export CSV"
     
     def export_zip(self, request, queryset=LabelledMedia.objects.filter(validation='C')):
         '''
