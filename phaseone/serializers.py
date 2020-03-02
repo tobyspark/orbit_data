@@ -1,12 +1,19 @@
 from rest_framework import serializers
 
-from .models import LabelledMedia
+from .models import Thing, Video
 
-class LabelledMediaSerializer(serializers.ModelSerializer):
+class ThingSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    timestamp = serializers.ReadOnlyField()
-    label = serializers.CharField(source='label_original')
+    label_validated = serializers.ReadOnlyField()
         
     class Meta:
-        model = LabelledMedia
-        fields = ['id', 'timestamp', 'label', 'media']
+        model = Thing
+        fields = ['id', 'label_participant', 'label_validated']
+
+class VideoSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    validation = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = Video
+        fields = ['id', 'thing', 'file', 'technique', 'validation']

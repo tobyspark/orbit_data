@@ -4,7 +4,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'media', views.LabelledMediaViewSet)
+router.register(r'thing', views.ThingViewSet)
+router.register(r'video', views.VideoViewSet)
 
 urlpatterns = [
     path('', views.info, name='info'),

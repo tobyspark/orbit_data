@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 
 from .forms import ConsentForm, SurveyForm
-from .models import Participant, Survey, LabelledMedia
-from .serializers import LabelledMediaSerializer
+from .models import Participant, Survey, Thing, Video
+from .serializers import ThingSerializer, VideoSerializer
 
 def info(request):
     """
@@ -87,13 +87,20 @@ def survey_done(request):
     """
     return render(request, 'phaseone/survey_done.html')
     
-class LabelledMediaViewSet(viewsets.ModelViewSet):
+class ThingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows media to be viewed or edited
+    API endpoint that allows Things to be viewed or edited
     """
-    queryset = LabelledMedia.objects.all().order_by('-timestamp')
-    serializer_class = LabelledMediaSerializer
+    queryset = Thing.objects.all().order_by('-created')
+    serializer_class = ThingSerializer
     
     def perform_create(self, serializer):
         participant = Participant.objects.get(id=self.request.user.username)
         serializer.save(participant=participant)
+
+class VideoViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Videos to be viewed or edited
+    """
+    queryset = Video.objects.all().order_by('-created')
+    serializer_class = VideoSerializer

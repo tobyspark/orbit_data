@@ -182,88 +182,110 @@ class Survey(EncryptedBlobModel):
     def __str__(self):
         return f"Survey for Participant {self.participant.id}"
 
-class Label(models.Model):
+class Thing(models.Model):
     '''
-    The (possibly researcher re-written) label to be used for a set of LabelledMedia objects
+    The thing the participant is going to label and capture videos of
     '''
-    label = models.CharField(max_length=50)
+    label_participant = models.CharField(
+        max_length=50,
+        )
+    label_validated = models.CharField(
+        max_length=50,
+        )
+    participant = models.ForeignKey(
+        Participant,
+        on_delete=models.CASCADE,
+        )
+    created = models.DateField(auto_now_add=True)
     
     @property
-    def media_count(self):
-        return self.labelledmedia_set.count()
+    def label(self):
+        return self.label_validated if self.label_validated else self.label_participant
+    
+    @property
+    def video_count(self):
+        return self.video_set.count()
     
     def __str__(self):
-        return f"{ self.label } [{ self.media_count }]"
+        return f"{ self.label } [{ self.video_count }]"
     
 
-class LabelledMedia(models.Model):
+class Video(models.Model):
     '''
-    The participant-shot image/video, as file.
+    The participant-shot video, as file.
     '''
     TECHNIQUES = (
         ('N', 'No technique'),
         ('R', 'Rotate'),
         ('Z', 'Zoom'),
-    )
+        )
     VALIDATION = (
         ('-', 'Unvalidated'),
         ('P', 'Reject: video shows PII'),
         ('I', 'Reject: video inappropriate'),
         ('C', 'Video is clean'),
-    )
-    label_original = models.CharField(max_length=50)
-    label_validated = models.ForeignKey(
-        Label,
-        null=True,
-        on_delete=models.SET_NULL,
         )
-    technique = models.CharField(max_length=1, choices=TECHNIQUES, default='N')
-    validation = models.CharField(max_length=1, choices=VALIDATION, default='-')
-    media = models.FileField()
-    participant = models.ForeignKey(
-        Participant,
+    thing = models.ForeignKey(
+        Thing,
         on_delete=models.CASCADE,
         )
-    timestamp = models.DateField(auto_now_add=True)
-    in_time = models.DecimalField(null=True, blank=True, max_digits=4, decimal_places=2)
-    out_time = models.DecimalField(null=True, blank=True, max_digits=4, decimal_places=2)
-    
-    @property
-    def label(self):
-        return self.label_validated.label if self.label_validated else f"Original: { self.label_original }"
-    
+    file = models.FileField()
+    technique = models.CharField(
+        max_length=1,
+        choices=TECHNIQUES,
+        default='N',
+        )
+    validation = models.CharField(
+        max_length=1,
+        choices=VALIDATION,
+        default='-',
+        )
+    in_time = models.DecimalField(
+        null=True,
+        blank=True,
+        max_digits=4,
+        decimal_places=2,
+        )
+    out_time = models.DecimalField(
+        null=True,
+        blank=True,
+        max_digits=4,
+        decimal_places=2,
+        )
+    created = models.DateField(auto_now_add=True)
+     
     def __str__(self):
-        return f"P{self.participant.id}: {self.label}/{self.get_technique_display()}. {self.get_validation_display()}"
+        return f"P{self.participant.id}: {self.thing.label}/{self.get_technique_display()}. {self.get_validation_display()}"
 
-@receiver(models.signals.post_delete, sender=LabelledMedia)
+@receiver(models.signals.post_delete, sender=Video)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     '''
-    Deletes file when corresponding `LabelledMedia` object is deleted.
+    Deletes file when corresponding `Video` object is deleted.
     '''
-    if instance.media:
+    if instance.file:
         try:
-            os.remove(instance.media.path)
+            os.remove(instance.file.path)
         except FileNotFoundError:
             # TODO: Logging
-            print(f'In LabelledMedia post_delete, could not delete {instance.media.path}')
+            print(f'In Video post_delete, could not delete {instance.file.path}')
 
-@receiver(models.signals.pre_save, sender=LabelledMedia)
+@receiver(models.signals.pre_save, sender=Video)
 def auto_delete_file_on_change(sender, instance, **kwargs):
     '''
-    Deletes old file when corresponding `LabelledMedia` object is updated with new file.
+    Deletes old file when corresponding `Video` object is updated with new file.
     '''
     if not instance.pk:
         return False
 
     try:
-        old_file = LabelledMedia.objects.get(pk=instance.pk).media
-    except LabelledMedia.DoesNotExist:
+        old_file = Video.objects.get(pk=instance.pk).file
+    except Video.DoesNotExist:
         return False
 
-    new_file = instance.media
+    new_file = instance.file
     if not old_file == new_file:
         try:
             os.remove(old_file.path)
         except FileNotFoundError:
             # TODO: Logging
-            print(f'In LabelledMedia pre_save, could not delete {instance.media.path}')
+            print(f'In Video pre_save, could not delete {instance.file.path}')
