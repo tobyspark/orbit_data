@@ -229,7 +229,9 @@ class Video(models.Model):
         Thing,
         on_delete=models.CASCADE,
         )
-    file = models.FileField()
+    file = models.FileField(
+        upload_to=lambda instance, filename: secrets.token_urlsafe(),
+        )
     technique = models.CharField(
         max_length=1,
         choices=TECHNIQUES,
