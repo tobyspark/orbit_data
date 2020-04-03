@@ -215,9 +215,9 @@ class Video(models.Model):
     The participant-shot video, as file.
     '''
     TECHNIQUES = (
-        ('N', 'No technique'),
-        ('R', 'Rotate'),
-        ('Z', 'Zoom'),
+        ('T', 'Train'),
+        ('Z', 'Test: Zoom'),
+        ('P', 'Test: Pan'),
         )
     VALIDATION = (
         ('-', 'Unvalidated'),
