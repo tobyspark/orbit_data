@@ -10,5 +10,6 @@ router.register(r'video', views.VideoViewSet)
 urlpatterns = [
     path('survey/done', views.survey_done, name='survey_done'),
     path('survey/<token>', views.survey, name='survey'),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/createparticipant/', views.ParticipantCreateView.as_view()),
 ]

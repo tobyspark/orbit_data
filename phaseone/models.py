@@ -93,7 +93,7 @@ class EncryptedBlobModel(models.Model):
 
 
 class ParticipantManager(models.Manager):
-    def create_participant(self, pii_email, pii_name, fields):
+    def create_participant(self, user, pii_email, pii_name):
         '''
         Create and save a participant record, encrypting the PII fields as a binary blob.
         '''
@@ -105,7 +105,7 @@ class ParticipantManager(models.Manager):
         data = json.dumps(info).encode('utf-8')
         
         # Encrypt and create
-        return self.create(**encrypt(data))
+        return self.create(user=user, **encrypt(data))
 
 
 class Participant(EncryptedBlobModel):
@@ -206,6 +206,9 @@ class Thing(models.Model):
         return f"{ self.label } [{ self.video_count }]"
     
 
+def random_filename(instance, filename):
+    secrets.token_urlsafe()
+
 class Video(models.Model):
     '''
     The participant-shot video, as file.
@@ -226,7 +229,7 @@ class Video(models.Model):
         on_delete=models.CASCADE,
         )
     file = models.FileField(
-        upload_to=lambda instance, filename: secrets.token_urlsafe(),
+        upload_to=random_filename,
         )
     technique = models.CharField(
         max_length=1,
