@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import AES, PKCS1_OAEP
@@ -110,10 +111,15 @@ class ParticipantManager(models.Manager):
 class Participant(EncryptedBlobModel):
     '''
     A study participant. Generates randomised ID suitable to refer to the participant throughout the research. Email, name are held in encrypted blob.
+    The corresponding user is a machine-generated construct to authorise API access. Should be no PII there, just jibberish.
     '''
     id = models.IntegerField(
         primary_key=True,
         default=mint_id,
+        )
+    user = models.OneToOneField(
+        User,
+        on_delete=models.PROTECT,
         )
     survey_started = models.DateTimeField(
         null=True,
