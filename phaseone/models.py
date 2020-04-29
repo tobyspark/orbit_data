@@ -103,12 +103,8 @@ class ParticipantManager(models.Manager):
         }
         data = json.dumps(info).encode('utf-8')
         
-        # Get desired fields from supplied
-        keys = ['publishing_videos', 'publishing_recordings', 'publishing_quotes']
-        desired_fields = { k: v for k, v in fields.items() if k in keys}
-        
         # Encrypt and create
-        return self.create(**encrypt(data), **desired_fields)
+        return self.create(**encrypt(data))
 
 
 class Participant(EncryptedBlobModel):
@@ -118,12 +114,6 @@ class Participant(EncryptedBlobModel):
     id = models.IntegerField(
         primary_key=True,
         default=mint_id,
-        )
-    publishing_videos = models.BooleanField(
-        )
-    publishing_recordings = models.BooleanField(
-        )
-    publishing_quotes = models.BooleanField(
         )
     survey_started = models.DateTimeField(
         null=True,

@@ -6,42 +6,9 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 
-from .forms import ConsentForm, SurveyForm
+from .forms import SurveyForm
 from .models import Participant, Survey, Thing, Video
 from .serializers import ThingSerializer, VideoSerializer
-
-def info(request):
-    """
-    The participant information page.
-    Static, links to consent page.
-    """
-    return render(request, 'phaseone/participant_info.html')
-
-def consent(request):
-    """
-    The consent page.
-    Presents form, creates participant data and redirects to survey.
-    """
-    if request.method == 'POST':
-        form = ConsentForm(request.POST)
-        if form.is_valid():
-            while True:
-                try:
-                    participant = Participant.objects.create_participant(
-                        pii_email=form.cleaned_data.pop('email'),
-                        pii_name=form.cleaned_data.pop('name'),
-                        fields=form.cleaned_data,
-                    )
-                    User.objects.create_user(f'{ participant.id }', password=f'FIXMEPOSTPILOT-uTbrm6jMP2UN6JdJSt1wqgM5rjkdLQwV9frdqsYeXhg')
-                    return HttpResponseRedirect(reverse('survey', kwargs={'token': participant.survey_token}))
-                except IntegrityError as error:
-                    # ID or token exists. Try again, generating new values.
-                    print(error)
-                    pass
-    else:
-        form = ConsentForm()
-    
-    return render(request, 'phaseone/consent.html', {'form': form})
 
 def survey(request, token):
     """

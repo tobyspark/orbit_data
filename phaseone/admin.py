@@ -14,7 +14,7 @@ import subprocess
 import tempfile
 
 from .models import Thing, Video, Participant, Survey
-from .forms import ConsentForm, SurveyForm
+from .forms import SurveyForm
 
 FFMPEG_PATH = '/usr/local/bin/ffmpeg' # FIXME: Platform/machine specific
 ZIP_PATH = '/usr/bin/zip' # FIXME: Platform/machine specific
