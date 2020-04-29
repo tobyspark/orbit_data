@@ -15,7 +15,7 @@ TOKEN_BYTES = 16
 def mint_token():
     return secrets.token_urlsafe(TOKEN_BYTES)
 def mint_id():
-    return secrets.randbelow(10000)
+    return secrets.randbelow(1000000)
 
 def encrypt(data):
     '''
