@@ -62,7 +62,7 @@ class SurveyForm(BetterForm):
                     'apps_more',
                     ]}),
             ('Camera', {
-                'description': 'Do you use the camera app on your iPhone?',
+                'description': 'Do you use the camera app on your iOS device?',
                 'fields': [
                     'camera_usage',
                     'camera_photos',
