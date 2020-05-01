@@ -222,6 +222,7 @@ class Video(models.Model):
         ('-', 'Unvalidated'),
         ('P', 'Reject: video shows PII'),
         ('I', 'Reject: video inappropriate'),
+        ('M', 'Reject: video does not feature object'),
         ('C', 'Video is clean'),
         )
     thing = models.ForeignKey(
