@@ -91,7 +91,7 @@ class ThingViewSet(viewsets.ModelViewSet):
 # TODO: get query to filter to participant things
 
     def perform_create(self, serializer):
-        participant = Participant.objects.get(id=self.request.user.username)
+        participant = Participant.objects.get(user=self.request.user)
         serializer.save(participant=participant)
 
 class VideoViewSet(viewsets.ModelViewSet):

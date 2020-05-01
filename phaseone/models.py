@@ -203,7 +203,7 @@ class Thing(models.Model):
         return self.video_set.count()
     
     def __str__(self):
-        return f"{ self.label } [{ self.video_count }]"
+        return f"{ self.participant.id }: { self.label } ({ self.video_count } videos)"
     
 
 def random_filename(instance, filename):
@@ -256,7 +256,7 @@ class Video(models.Model):
     created = models.DateField(auto_now_add=True)
      
     def __str__(self):
-        return f"P{self.participant.id}: {self.thing.label}/{self.get_technique_display()}. {self.get_validation_display()}"
+        return f"P{self.thing.participant.id}: {self.thing.label}/{self.get_technique_display()}. {self.get_validation_display()}"
 
 @receiver(models.signals.post_delete, sender=Video)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
