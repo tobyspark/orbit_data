@@ -6,6 +6,7 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import BasePermission
 from secrets import token_hex
 from base64 import b64encode
 
@@ -57,14 +58,21 @@ def survey_done(request):
     """
     return render(request, 'phaseone/survey_done.html')
 
+class CanCreateUserPermission(BasePermission):
+    """
+    Will permit if request's user has the add user permission.
+    e.g. in admin pages, add this to the OrbitCamera user.
+    """
+    def has_permission(self, request, view):
+        return request.user.has_perm('auth.add_user')
 
 class ParticipantCreateView(CreateAPIView):
     """
     API endpoint to create a new user+participant
+    Requires user add permission 
     """
     serializer_class = ParticipantCreateSerializer
-
-# TODO: PERMISSION: Only OrbitCamera user
+    permission_classes = [CanCreateUserPermission]
 
     def perform_create(self, serializer):
         # Create random username and password
@@ -83,12 +91,14 @@ class ParticipantCreateView(CreateAPIView):
 
 class ThingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Things to be viewed or edited
+    API endpoint to view or edit the logged-in participant's Things
     """
-    queryset = Thing.objects.all().order_by('-created')
     serializer_class = ThingSerializer
+    queryset = Thing.objects.none()
 
-# TODO: get query to filter to participant things
+    def get_queryset(self):
+        user = self.request.user
+        return Thing.objects.filter(participant__user=user).order_by('-created')
 
     def perform_create(self, serializer):
         participant = Participant.objects.get(user=self.request.user)
@@ -96,9 +106,11 @@ class ThingViewSet(viewsets.ModelViewSet):
 
 class VideoViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Videos to be viewed or edited
+    API endpoint to view or edit the logged-in participant's Videos
     """
-    queryset = Video.objects.all().order_by('-created')
     serializer_class = VideoSerializer
+    queryset = Video.objects.none()
 
-# TODO: get query to filter to participant things
+    def get_queryset(self):
+        user = self.request.user
+        return Video.objects.filter(thing__participant__user=user).order_by('-created')
