@@ -207,7 +207,7 @@ class Thing(models.Model):
     
 
 def random_filename(instance, filename):
-    secrets.token_urlsafe()
+    return secrets.token_urlsafe()
 
 class Video(models.Model):
     '''
