@@ -41,10 +41,16 @@ class ThingAdmin(admin.ModelAdmin):
     ...will it do anything beyond ModelAdmin for the Thing model?
     '''
     list_display = (
-        'label',
+        'label_participant',
+        'label_validated',
+        'participant',
+        'video_breakdown',
         'video_count',
+        'created',
         )
-
+    list_filter = (
+        'created',
+        )
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
@@ -52,12 +58,29 @@ class VideoAdmin(admin.ModelAdmin):
     Provides export actions needed by research team.
     '''
     # actions = ['export_csv', 'export_zip', 'merge_labels']
+    def thing_label(self, obj):
+        return obj.thing.label
+
+    def thing_participant(self, obj):
+        return obj.thing.participant
+
+    def thing_video_breakdown(self, obj):
+        return obj.thing.video_breakdown
+
     list_display = (
-        'thing',
+        'id',
+        'thing_participant',
+        'thing_label',
+        'thing_video_breakdown',
         'technique',
         'validation',
+        'created',
         )
-
+    list_filter = (
+        'technique',
+        'validation',
+        'created',
+        )
 # @admin.register(LabelledMedia)
 # class LabelledMediaAdmin(admin.ModelAdmin):
 #     '''

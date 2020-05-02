@@ -202,6 +202,13 @@ class Thing(models.Model):
     def video_count(self):
         return self.video_set.count()
     
+    @property
+    def video_breakdown(self):
+        counts = []
+        for t in Video.TECHNIQUES:
+            counts.append(f"{t[0]}:{self.video_set.filter(technique=t[0]).count()}")
+        return ' '.join(counts)
+
     def __str__(self):
         return f"{ self.participant.id }: { self.label } ({ self.video_count } videos)"
     
