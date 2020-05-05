@@ -168,7 +168,7 @@ class Survey(EncryptedBlobModel):
     '''
     The survey data completed by a participant. Held in an encrypted blob.
     '''
-    participant = models.ForeignKey(
+    participant = models.OneToOneField(
         Participant,
         on_delete=models.CASCADE,
         )
