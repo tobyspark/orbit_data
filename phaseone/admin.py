@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
 from django.db.models import Count
+from django.contrib.humanize.templatetags.humanize import naturaltime
 import json
 import csv
 import datetime
@@ -57,7 +58,8 @@ class VideoAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team.
     '''
-    # actions = ['export_csv', 'export_zip', 'merge_labels']
+    actions = ['export_csv', 'export_zip']
+
     def thing_label(self, obj):
         return obj.thing.label
 
