@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from django.conf import settings
-from django.urls import path
+from django.urls import path, reverse
 from django.db.models import Count
 import json
 import csv
@@ -244,17 +244,54 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
     '''
-    actions = ['export_json', 'export_csv', 'export_html']
-    list_display = ('id', 'survey_description')
+    actions = ['export_json', 'export_csv']
+    list_display = ('id', 'things', 'videos', 'last_upload', 'survey_description')
     
+    def things(self, obj):
+        '''
+        Count of their things, to display in column
+        '''
+        return Thing.objects.filter(participant=obj).count()
+
+    def videos(self, obj):
+        '''
+        Count of their videos, to display in column
+        '''
+        return Video.objects.filter(thing__participant=obj).count()
+
+    def last_upload(self, obj):
+        '''
+        Date of their last video upload, to display in column
+        '''
+        try:
+            latest =  Video.objects.filter(thing__participant=obj).order_by('-created')[0]
+        except IndexError:
+            return "-"
+        return latest.created
+
+
+    def survey_description(self, obj):
+        survey_status = 'Survey complete'
+        if not obj.survey_done:
+            if obj.survey_started is None:
+                survey_status = f"Not started. https://orbit-data.city.ac.uk{ reverse('survey', kwargs={ 'token': obj.survey_token} ) }"
+            else:
+                survey_status = f"Started { naturaltime(obj.survey_started) }"
+        return survey_status
+
     def datum(self, item):
+        '''
+        Dict of participant data, decrypting PII in Participant and Survey objects. Used for export.
+        '''
+        try:
+            survey_pii = item.survey.decrypt()
+        except Survey.DoesNotExist:
+            survey_pii = {}
+
         return {
             'id': item.id,
             **item.decrypt(),
-            **{x: True for x in ConsentForm.base_fields.keys() if x.startswith('consent')},
-            'publishing_videos': item.publishing_videos,
-            'publishing_recordings': item.publishing_recordings,
-            'publishing_quotes': item.publishing_quotes,
+            **survey_pii,
             }
     
     def export_json(self, request, queryset):
@@ -274,80 +311,16 @@ class ParticipantAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
         
-        headers = headers_from_form(ConsentForm, first_headers=['id', 'name', 'email'])
-        
+        participant_headers = ['id', 'name', 'email']
+        survey_headers = headers_from_form(SurveyForm, first_headers=['id'])
+
+        headers = participant_headers + survey_headers[1:]
+
         writer = csv.writer(response)
         writer.writerow(headers)
         for item in queryset:
             datum = self.datum(item)
-            writer.writerow([datum[x] for x in headers])
+            writer.writerow([datum.get(x, '-') for x in headers])
     
         return response
     export_csv.short_description = "Export CSV"
-        
-    def export_html(self, request, queryset):
-        '''
-        Return the consent page filled in with participant's data
-        Caveat: this will only return the first selected participant
-        '''
-        item = queryset[0] # Function will only be called with a queryset of at least one item
-        datum = self.datum(item)
-
-        req_consents = {x: True for x in ConsentForm.base_fields.keys() if x.startswith('consent')}
-        
-        form = ConsentForm({**datum, **req_consents})
-        form.is_valid()
-        return render(request, 'phaseone/consent.html', {'form': form})
-    export_html.short_description = 'Show consent page'
-
-
-@admin.register(Survey)
-class SurveyAdmin(admin.ModelAdmin):
-    '''
-    Provides export actions needed by research team. PII will be included if decryption keys loaded.
-    '''
-    actions = ['export_json', 'export_csv', 'export_html']
-    
-    def datum(self, item):
-        return {
-            'id': item.participant.id,
-            **item.decrypt(),
-               }
-    
-    def export_json(self, request, queryset):
-        '''
-        Return a JSON response with participant info
-        '''
-        return HttpResponse(
-            json.dumps({d.pop('id'): d for d in (self.datum(item) for item in queryset)}),
-            content_type="application/json",
-            )
-    export_json.short_description = "Export JSON"
-    
-    def export_csv(self, request, queryset):
-        '''
-        Return a CSV file of participant(s) data suitabled for import into Excel
-        '''
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="orbit_survey.csv"'
-        
-        headers = headers_from_form(SurveyForm, first_headers=['id'])
-        
-        writer = csv.writer(response)
-        writer.writerow(headers)
-        for item in queryset:
-            datum = self.datum(item)
-            writer.writerow([datum[x] for x in headers])
-    
-        return response
-    export_csv.short_description = "Export CSV"
-        
-    def export_html(self, request, queryset):
-        '''
-        Return the survey page filled in with participant's data
-        Caveat: this will only return the first selected participant
-        '''
-        form = SurveyForm(self.datum(queryset[0]))
-        form.is_valid() # FIXME: Fails on gender!?
-        return render(request, 'phaseone/survey.html', {'form': form})
-    export_html.short_description = 'Show survey page'
