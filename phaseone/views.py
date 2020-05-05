@@ -83,7 +83,25 @@ class ParticipantCreateView(CreateAPIView):
         # Create participant
         pii_email = serializer.validated_data['email']
         pii_name = serializer.validated_data['name']
-        Participant.objects.create_participant(user, pii_email, pii_name)
+        max_tries = 10
+        for i in range(0, max_tries):
+            try:
+                Participant.objects.create_participant(user, pii_email, pii_name)
+                break
+            except IntegrityError as error:
+                # ID or token exists. Unlikely, but possible. Try again, generating new values.
+                if i < max_tries - 1:
+                    continue
+                # We've tried enough times. Something is up.
+                else:
+                    print(
+                        f"Can not create new participant. "
+                        "Tried minting {max_tries} random IDs (and survey tokens), and hit an existing ID or token each time. "
+                        "Something is either broken, or the number pool the IDs are drawn from needs to be an order of magnitude bigger. "
+                        "Or you've been fantastically unlucky, and the client will try again and all should be fine.",
+                        flush=True
+                        ) # This should be an error log message
+                    raise IntegrityError(error)
 
         # Create the auth credential to return as API response
         token_bytes = f'{username}:{password}'.encode()
