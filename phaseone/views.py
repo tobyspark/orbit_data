@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.urls import reverse
 from django.db import IntegrityError
 from django.utils.timezone import now
@@ -25,7 +25,7 @@ def survey(request, token):
     except Participant.DoesNotExist:
         # TODO: Log that a survey page with invalid token was hit.
         # TODO: Message the user that token was invalid.
-        return HttpResponseRedirect(reverse('info'))
+        return HttpResponseNotFound()
     
     # Check the participant is still to complete the survey
     if participant.survey_done:
