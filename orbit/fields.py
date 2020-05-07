@@ -1,11 +1,12 @@
 from django import forms
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 
 class VideoPreviewWidget(forms.widgets.FileInput):
     def render(self, name, value, attrs=None, **kwargs):
         file_input_html = super().render(name, value, attrs=None, **kwargs)
-        video_preview_html = mark_safe(f'<br><br><video controls src="{ value.url }"/>')
+        video_preview_html = mark_safe(f'''<br><br><video controls src="{ reverse('admin_video', kwargs={'filename': value.name}) }"/>''')
         return f'{file_input_html}{video_preview_html}'
 
 
