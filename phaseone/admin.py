@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
@@ -226,7 +226,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         Dict of participant data, decrypting PII in Participant and Survey objects. Used for export.
         '''
         try:
-            survey_pii = item.survey.decrypt()
+            survey_pii = item.survey.decrypt(private_key_pem=settings.PII_KEY_PRIVATE)
         except Survey.DoesNotExist:
             survey_pii = {}
 
@@ -240,6 +240,11 @@ class ParticipantAdmin(admin.ModelAdmin):
         '''
         Return a CSV file of participant(s) data suitable for import into Excel
         '''
+        # If no key, go to view with form to supply the key on-demand.
+        if settings.PII_KEY_PRIVATE is None:
+            return HttpResponseRedirect(reverse('participant_export'))
+
+        # If key, process here.
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
         
@@ -255,4 +260,7 @@ class ParticipantAdmin(admin.ModelAdmin):
             writer.writerow([datum.get(x, '-') for x in headers])
     
         return response
-    export_csv.short_description = "Export CSV"
+    if settings.PII_KEY_PRIVATE is None:
+        export_csv.short_description = "Export CSV (PII decryption key must be supplied)"
+    else:
+        export_csv.short_description = "Export CSV (PII decryption key is loaded into server)"
