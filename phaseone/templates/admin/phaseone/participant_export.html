@@ -36,11 +36,13 @@
 
 <div id="content-main">
 
-<form action="{% url 'participant_export' %}" method="post" id="decrypt-form">{% csrf_token %}
+<form action="{% url 'participant_export' %}" method="post">{% csrf_token %}
   <div class="form-row">
-    {{ form.decryption_key.errors }}
-    {{ form.decryption_key.label_tag }} {{ form.decryption_key }}
-    <label>&nbsp;</label><input type="submit" value="Export CSV">
+    <pre>-----BEGIN RSA PRIVATE KEY-----</pre>
+    {{ form.thing.errors }}
+    {{ form.thing }}
+    <pre>-----END RSA PRIVATE KEY-----</pre>
+    <input type="submit" value="Export CSV">
   </div>
 </form>
 

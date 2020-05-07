@@ -13,9 +13,8 @@ from ranged_fileresponse import RangedFileResponse
 from secrets import token_hex
 from base64 import b64encode
 import os
-import csv
 
-from .admin import headers_from_form
+from .admin import ParticipantAdmin
 from .forms import SurveyForm, DecryptForm
 from .models import Participant, Survey, Thing, Video
 from .serializers import ParticipantCreateSerializer, ThingSerializer, VideoSerializer
@@ -84,43 +83,14 @@ def participant_export(request):
     Original plan was to have server backup, which could be run with decryption key loaded.
     This is not that plan, but it will work for the team. Policy: check https and access within City network.
     '''
-    def datum(item, key):
-        '''
-        Dict of participant data, decrypting PII in Participant and Survey objects.
-        '''
-        try:
-            survey_pii = item.survey.decrypt(private_key_pem=key)
-        except Survey.DoesNotExist:
-            survey_pii = {}
-
-        return {
-            'id': item.id,
-            **item.decrypt(private_key_pem=key),
-            **survey_pii,
-            }
-
     form = DecryptForm
     if request.method == 'POST':
         form = DecryptForm(request.POST)
         if form.is_valid():
             try:
-                pem_key = form.cleaned_data['decryption_key']
-
-                response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
-                
-                participant_headers = ['id', 'name', 'email']
-                survey_headers = headers_from_form(SurveyForm, first_headers=['id'])
-
-                headers = participant_headers + survey_headers[1:]
-
-                writer = csv.writer(response)
-                writer.writerow(headers)
-                for item in Participant.objects.all():
-                    d = datum(item, key=pem_key)
-                    writer.writerow([d.get(x, '-') for x in headers])
-            
-                return response
+                pem_key = f"-----BEGIN RSA PRIVATE KEY-----\r\n{ form.cleaned_data['thing'] }\r\n-----END RSA PRIVATE KEY-----"
+                pa = ParticipantAdmin(Video, None)
+                return pa.export_csv(request, Participant.objects.all(), pem_key)
             except:
                 form.add_error(None, 'There was a problem decrypting the data.')
     return render(request, 'admin/phaseone/participant_export.html', {'form': form})

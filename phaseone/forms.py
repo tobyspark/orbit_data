@@ -10,7 +10,7 @@ def validate_age(value):
     if value > 100: raise ValidationError('Age too old')
 
 class DecryptForm(forms.Form):
-    decryption_key = forms.CharField(
+    thing = forms.CharField(
         required=True,
         widget=forms.Textarea,
         )

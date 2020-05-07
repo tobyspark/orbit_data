@@ -186,7 +186,8 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
     '''
-    actions = ['export_csv']
+    export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
+    actions = [export_action_name]
     list_display = ('id', 'things', 'videos', 'last_upload', 'survey_description')
     
     def things(self, obj):
@@ -221,30 +222,25 @@ class ParticipantAdmin(admin.ModelAdmin):
                 survey_status = f"Started { naturaltime(obj.survey_started) }"
         return survey_status
 
-    def datum(self, item):
+    def datum(self, item, key):
         '''
         Dict of participant data, decrypting PII in Participant and Survey objects. Used for export.
         '''
         try:
-            survey_pii = item.survey.decrypt(private_key_pem=settings.PII_KEY_PRIVATE)
+            survey_pii = item.survey.decrypt(private_key_pem=key)
         except Survey.DoesNotExist:
             survey_pii = {}
 
         return {
             'id': item.id,
-            **item.decrypt(),
+            **item.decrypt(private_key_pem=key),
             **survey_pii,
             }
             
-    def export_csv(self, request, queryset):
+    def export_csv(self, request, queryset, key=settings.PII_KEY_PRIVATE):
         '''
         Return a CSV file of participant(s) data suitable for import into Excel
         '''
-        # If no key, go to view with form to supply the key on-demand.
-        if settings.PII_KEY_PRIVATE is None:
-            return HttpResponseRedirect(reverse('participant_export'))
-
-        # If key, process here.
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
         
@@ -256,11 +252,13 @@ class ParticipantAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         writer.writerow(headers)
         for item in queryset:
-            datum = self.datum(item)
+            datum = self.datum(item, key)
             writer.writerow([datum.get(x, '-') for x in headers])
     
         return response
-    if settings.PII_KEY_PRIVATE is None:
-        export_csv.short_description = "Export CSV (PII decryption key must be supplied)"
-    else:
-        export_csv.short_description = "Export CSV (PII decryption key is loaded into server)"
+    export_csv.short_description = "Export CSV (PII decryption key is loaded into server)"
+
+    def export_csv_view(self, request, queryset):
+        return HttpResponseRedirect(reverse('participant_export'))
+    export_csv_view.short_description = "Export CSV (PII decryption key must be supplied)"
+        
