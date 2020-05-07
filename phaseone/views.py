@@ -13,8 +13,10 @@ from ranged_fileresponse import RangedFileResponse
 from secrets import token_hex
 from base64 import b64encode
 import os
+import csv
 
-from .forms import SurveyForm
+from .admin import headers_from_form
+from .forms import SurveyForm, DecryptForm
 from .models import Participant, Survey, Thing, Video
 from .serializers import ParticipantCreateSerializer, ThingSerializer, VideoSerializer
 
@@ -74,6 +76,54 @@ def video(request, filename):
 
     return RangedFileResponse(request, open(videopath, 'rb'), content_type='video/mp4')
 
+@permission_required('phaseone.view_participant')
+def participant_export(request):
+    '''
+    Return a CSV file of all participant data suitable for import into Excel.
+    This is a clone of the admin function, modified so that the decryption key can be supplied by the user.
+    Original plan was to have server backup, which could be run with decryption key loaded.
+    This is not that plan, but it will work for the team. Policy: check https and access within City network.
+    '''
+    def datum(item, key):
+        '''
+        Dict of participant data, decrypting PII in Participant and Survey objects.
+        '''
+        try:
+            survey_pii = item.survey.decrypt(private_key_pem=key)
+        except Survey.DoesNotExist:
+            survey_pii = {}
+
+        return {
+            'id': item.id,
+            **item.decrypt(private_key_pem=key),
+            **survey_pii,
+            }
+
+    form = DecryptForm
+    if request.method == 'POST':
+        form = DecryptForm(request.POST)
+        if form.is_valid():
+            try:
+                pem_key = form.cleaned_data['decryption_key']
+
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
+                
+                participant_headers = ['id', 'name', 'email']
+                survey_headers = headers_from_form(SurveyForm, first_headers=['id'])
+
+                headers = participant_headers + survey_headers[1:]
+
+                writer = csv.writer(response)
+                writer.writerow(headers)
+                for item in Participant.objects.all():
+                    d = datum(item, key=pem_key)
+                    writer.writerow([d.get(x, '-') for x in headers])
+            
+                return response
+            except:
+                form.add_error(None, 'There was a problem decrypting the data.')
+    return render(request, 'admin/phaseone/participant_export.html', {'form': form})
 
 class CanCreateUserPermission(BasePermission):
     """

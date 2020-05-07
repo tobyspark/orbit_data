@@ -40,11 +40,10 @@ def encrypt(data):
         'aes_ciphertext': ciphertext,
     }
     
-def decrypt(enc_aes_key, aes_nonce, aes_mac_tag, aes_ciphertext):
+def decrypt(enc_aes_key, aes_nonce, aes_mac_tag, aes_ciphertext, private_key_pem):
     '''
     Decrypt data, returning bytes.
     '''
-    private_key_pem = settings.PII_KEY_PRIVATE
     if private_key_pem is None:
         print('Attempting to decrypt without private key')
         return None
@@ -74,12 +73,13 @@ class EncryptedBlobModel(models.Model):
     aes_mac_tag = models.BinaryField(max_length=16)
     aes_ciphertext = models.BinaryField()
     
-    def decrypt(self):
+    def decrypt(self, private_key_pem = settings.PII_KEY_PRIVATE):
         data = decrypt(
             self.enc_aes_key,
             self.aes_nonce,
             self.aes_mac_tag,
-            self.aes_ciphertext
+            self.aes_ciphertext,
+            private_key_pem
             )
         
         if data is None:

@@ -12,4 +12,5 @@ urlpatterns = [
     path('survey/<token>', views.survey, name='survey'),
     path('api/', include(router.urls)),
     path('api/createparticipant/', views.ParticipantCreateView.as_view()),
+    path('participant_export/', views.participant_export, name='participant_export'),
 ]
