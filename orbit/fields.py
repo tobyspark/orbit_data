@@ -4,10 +4,15 @@ from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 
 class VideoPreviewWidget(forms.widgets.FileInput):
+    '''
+    Use as a FileInput widget replacement. Just shows video. Intended for Admin page, assumes file input path is safe.
+    '''
     def render(self, name, value, attrs=None, **kwargs):
-        file_input_html = super().render(name, value, attrs=None, **kwargs)
-        video_preview_html = mark_safe(f'''<br><br><video controls src="{ reverse('admin_video', kwargs={'filename': value.name}) }"/>''')
-        return f'{file_input_html}{video_preview_html}'
+        video_aspect = 100 # height as a percent of width, e.g. 16:9 would be 56
+        video_preview_html = mark_safe(f'''
+            <video controls src="{ reverse('admin_video', kwargs={'filename': value.name}) }" style="width: 100%; height: 100%" />
+            ''')
+        return f'{video_preview_html}'
 
 
 GENDER_CHOICES = [
