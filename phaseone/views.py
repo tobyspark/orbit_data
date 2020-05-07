@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, FileResponse
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.urls import reverse
 from django.db import IntegrityError
 from django.utils.timezone import now
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import permission_required
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import BasePermission
+from ranged_fileresponse import RangedFileResponse
 from secrets import token_hex
 from base64 import b64encode
 import os
@@ -71,7 +72,7 @@ def video(request, filename):
     if not os.path.exists(videopath):
         return HttpResponseNotFound()
 
-    return FileResponse(open(videopath, 'rb'), content_type='video/mp4')
+    return RangedFileResponse(request, open(videopath, 'rb'), content_type='video/mp4')
 
 
 class CanCreateUserPermission(BasePermission):
