@@ -3,7 +3,7 @@ from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
-from django.db.models import Count
+from django.db.models import Count, FileField
 from django.contrib.humanize.templatetags.humanize import naturaltime
 import json
 import csv
@@ -14,6 +14,7 @@ from zipfile import ZipFile
 
 from .models import Thing, Video, Participant, Survey
 from .forms import SurveyForm
+from orbit.fields import VideoPreviewWidget
 
 admin.site.site_header = "ORBIT Data"
 admin.site.site_title = "ORBIT Data"
@@ -53,7 +54,14 @@ class VideoAdmin(admin.ModelAdmin):
     '''
     Provides export actions needed by research team.
     '''
-    actions = ['export_csv', 'export_zip']
+    # CHANGE VIEW ------
+
+    formfield_overrides = {
+        FileField: {'widget': VideoPreviewWidget}
+    }
+
+
+    # LIST VIEW DISPLAY ------
 
     def thing_label(self, obj):
         return obj.thing.label
@@ -79,12 +87,21 @@ class VideoAdmin(admin.ModelAdmin):
         'created',
         )
 
+
+    ### LIST VIEW ACTIONS
+
     def get_urls(self):
+        '''
+        Used by the 'Export ZIP (All archived)' button
+        See templates/admin/phasepne/video/change_list_object_tools.html
+        '''
         urls = super().get_urls()
         my_urls = [
             path('export-zip/', self.admin_site.admin_view(self.export_zip))
         ]
         return my_urls + urls
+
+    actions = ['export_csv', 'export_zip']
 
     def export_csv(self, request, queryset):
         '''
