@@ -9,6 +9,12 @@ def validate_age(value):
     if value < 20: raise ValidationError('Age too young')
     if value > 100: raise ValidationError('Age too old')
 
+class DecryptForm(forms.Form):
+    decryption_key = forms.CharField(
+        required=True,
+        widget=forms.Textarea,
+        )
+
 @parsleyfy
 class SurveyForm(BetterForm):
     '''
