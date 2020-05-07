@@ -1,14 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, FileResponse
 from django.urls import reverse
 from django.db import IntegrityError
 from django.utils.timezone import now
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import permission_required
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import BasePermission
 from secrets import token_hex
 from base64 import b64encode
+import os
 
 from .forms import SurveyForm
 from .models import Participant, Survey, Thing, Video
@@ -57,6 +60,19 @@ def survey_done(request):
     Static, no further navigation.
     """
     return render(request, 'phaseone/survey_done.html')
+
+@permission_required('phaseone.view_video')
+def video(request, filename):
+    """
+    Returns the video file. To be used by VideoPreviewWidget in admin's modelform. Requires permission decorator!
+    """
+    videopath = os.path.join(settings.MEDIA_ROOT, filename)
+    
+    if not os.path.exists(videopath):
+        return HttpResponseNotFound()
+
+    return FileResponse(open(videopath, 'rb'), content_type='video/mp4')
+
 
 class CanCreateUserPermission(BasePermission):
     """
