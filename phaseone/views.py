@@ -93,7 +93,12 @@ def participant_export(request):
                 return pa.export_csv(request, Participant.objects.all(), pem_key)
             except:
                 form.add_error(None, 'There was a problem decrypting the data.')
-    return render(request, 'admin/phaseone/participant_export.html', {'form': form})
+    return render(request, 'admin/phaseone/participant_export.html', {
+        'form': form,
+        'title': 'Participant Export',
+        'site_title': 'ORBIT Data',
+        'site_header': 'ORBIT Data'
+        })
 
 class CanCreateUserPermission(BasePermission):
     """
