@@ -1,6 +1,20 @@
-# orbit
+# ORBIT Data
 
-...currently notes to self. check all these commands before actioning, it has been assembled retrospectively
+A web-app to collate and administrate a dataset. Comprises REST API for data upload from native clients, and Admin interface for verification and export of the data. 
+
+Built with Python using the Django framework. Provisioning for a CentOS VPS.
+
+## Version history
+
+v1.0 
+- As per ORBIT Camera iOS app v1.0
+- Phase one study launch May 2020
+
+
+# Notes to self, to sort...
+
+In / Out times - We found we needed them in the pilot, but that was pre-instructions. So they're there in the data model, but currently ignored on export. will need ffmpeg or similar installed
+
 
 ## dev / fish
 
