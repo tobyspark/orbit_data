@@ -65,9 +65,11 @@ class VideoAdmin(admin.ModelAdmin):
 
     def thing_label(self, obj):
         return obj.thing.label
+    thing_label.admin_order_field = 'thing__label_participant'
 
     def thing_participant(self, obj):
         return obj.thing.participant
+    thing_participant.admin_order_field = 'thing__participant'
 
     def thing_video_breakdown(self, obj):
         return obj.thing.video_breakdown
