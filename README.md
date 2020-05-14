@@ -15,7 +15,7 @@ Built with Python using the Django framework. Provisioning for a CentOS host.
 
 `User` Used to regulate API access. A client app can ship with user credentials that the server will authenticate, and from this first contact create a new user to allow and identify further access. A Django model, `django.contrib.auth.models.User`
 
-Deleting a User has the consequence of barring futher API access with those credentials. This way, a Participant's data can be kept, while locking out their client's access. A Django model, in `orbit.phaseone.models`
+De-activating a User (option in Admin interface) or actually deleting the record has the consequence of barring futher API access with those credentials. This way, a Participant's data can be kept, while locking out their client's access. A Django model, in `orbit.phaseone.models`
 
 `Participant` A study participant, i.e. someone who has given consent and is using a client app to contribute to the dataset. Created with a randomised ID. A `Participant` is optionally linked to a `User`: the two are created together, enabling API access and anonymised record-keeping, but the API access part can be removed. A Django model, in `orbit.phaseone.models`. Export to CSV code in `orbit.phaseone.admin`.
 
