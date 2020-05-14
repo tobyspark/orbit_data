@@ -4,6 +4,8 @@ A web-app to collate and administrate the ORBIT dataset. Comprises REST API for 
 
 Built with Python using the Django framework. Provisioning for a CentOS host.
 
+iOS native client: [ORBIT Camera](https://github.com/tobyspark/ORBIT-Camera)
+
 ## Features
 
 ### Concepts
