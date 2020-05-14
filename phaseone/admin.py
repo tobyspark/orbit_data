@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
 from django.db.models import Count, FileField
+from django.utils.text import slugify
 from django.contrib.humanize.templatetags.humanize import naturaltime
 import json
 import csv
@@ -151,7 +152,7 @@ class VideoAdmin(admin.ModelAdmin):
             with ZipFile(export_zip_path, 'w') as export_zip:
                 # Process media objects
                 for item in queryset:
-                    filename = f"{ os.path.basename(item.file.path) }.mp4"
+                    filename = f"{ item.thing.participant }--{ slugify(item.thing.label) }--{ item.technique }--{ os.path.basename(item.file.path) }.mp4"
 
                     # Add to zip
                     export_zip.write(
