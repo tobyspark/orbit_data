@@ -6,6 +6,11 @@ Built with Python using the Django framework. Provisioning for a CentOS host.
 
 iOS native client: [ORBIT Camera](https://github.com/tobyspark/ORBIT-Camera)
 
+Developed by Toby Harris – https://tobyz.net  
+For ORBIT Project Name – https://orbit.city.ac.uk  
+At ***REMOVED*** – https://hcid.city https://www.city.ac.uk  
+Funded by Microsoft AI for Accessibility – https://www.microsoft.com/en-us/research/blog/wheres-my-stuff-developing-ai-with-help-from-people-who-are-blind-or-low-vision-to-meet-their-needs/  
+
 ## Features
 
 ### Concepts
