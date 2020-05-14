@@ -118,7 +118,8 @@ class Participant(EncryptedBlobModel):
         )
     user = models.OneToOneField(
         User,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
+        null=True,
         )
     survey_started = models.DateTimeField(
         null=True,
