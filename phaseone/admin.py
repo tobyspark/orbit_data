@@ -193,7 +193,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
     actions = [export_action_name]
-    list_display = ('id', 'things', 'videos', 'last_upload', 'survey_description',)
+    list_display = ('id', 'study_start', 'study_end', 'things', 'videos', 'last_upload', 'survey_description',)
     list_filter = ('in_study',)
     
     def things(self, obj):
