@@ -7,6 +7,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from ranged_fileresponse import RangedFileResponse
@@ -164,6 +166,18 @@ class ParticipantInStudyPeriodPermission(BasePermission):
     def has_permission(self, request, view):
         participant = Participant.objects.get(user=request.user)
         return participant.study_start <= date.today() <= participant.study_end 
+
+class ParticipantView(APIView):
+    """
+    Returns info about the logged-in participant
+    i.e. study dates as other API access is locked off outside of these dates
+    """
+    permission_classes = (IsAuthenticated, ParticipantPermission,)
+
+    def get(self, request, format=None):
+        participant = Participant.objects.get(user=request.user)
+        serialized = {'study_start': participant.study_start, 'study_end': participant.study_end}
+        return Response(serialized)
 
 class ThingViewSet(viewsets.ModelViewSet):
     """
