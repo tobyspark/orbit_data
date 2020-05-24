@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import AES, PKCS1_OAEP
+from datetime import date
 import secrets
 import json
 import os
@@ -11,6 +12,9 @@ import os
 from orbit.fields import GenderField
 
 TOKEN_BYTES = 16
+
+STUDY_START = date.fromisoformat('2020-05-04')
+STUDY_END = date.fromisoformat('2020-06-30')
 
 def mint_token():
     return secrets.token_urlsafe(TOKEN_BYTES)
@@ -133,9 +137,14 @@ class Participant(EncryptedBlobModel):
         max_length=TOKEN_BYTES * 2, # average base64 encoding = 1.3x
         unique=True,
         )
-    
+    study_start = models.DateField(
+        default=STUDY_START,
+        )
+    study_end = models.DateField(
+        default=STUDY_END,
+        )
     objects = ParticipantManager()
-    
+
     @property
     def survey_done(self):
         return Survey.objects.filter(participant=self).exists()
