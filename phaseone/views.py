@@ -8,10 +8,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from ranged_fileresponse import RangedFileResponse
 from secrets import token_hex
 from base64 import b64encode
+from datetime import date
 import os
 
 from .admin import ParticipantAdmin
@@ -149,12 +150,28 @@ class ParticipantCreateView(CreateAPIView):
         token_bytes = f'{username}:{password}'.encode()
         serializer.validated_data['auth_credential'] = 'Basic ' + b64encode(token_bytes).decode()
 
+class ParticipantPermission(BasePermission):
+    """
+    Will permit if request's user has participant.
+    """
+    def has_permission(self, request, view):
+        return Participant.objects.filter(user=request.user).exists()
+
+class ParticipantInStudyPeriodPermission(BasePermission):
+    """
+    Will permit if request's user's participant study period is current.
+    """
+    def has_permission(self, request, view):
+        participant = Participant.objects.get(user=request.user)
+        return participant.study_start <= date.today() <= participant.study_end 
+
 class ThingViewSet(viewsets.ModelViewSet):
     """
     API endpoint to view or edit the logged-in participant's Things
     """
     serializer_class = ThingSerializer
     queryset = Thing.objects.none()
+    permission_classes = (IsAuthenticated, ParticipantPermission, ParticipantInStudyPeriodPermission,)
 
     def get_queryset(self):
         user = self.request.user
@@ -170,6 +187,7 @@ class VideoViewSet(viewsets.ModelViewSet):
     """
     serializer_class = VideoSerializer
     queryset = Video.objects.none()
+    permission_classes = (IsAuthenticated, ParticipantPermission, ParticipantInStudyPeriodPermission,)
 
     def get_queryset(self):
         user = self.request.user
