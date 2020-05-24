@@ -47,6 +47,7 @@ class ThingAdmin(admin.ModelAdmin):
         'created',
         )
     list_filter = (
+        'participant__in_study',
         'created',
         )
 
@@ -85,6 +86,7 @@ class VideoAdmin(admin.ModelAdmin):
         'created',
         )
     list_filter = (
+        'thing__participant__in_study',
         'technique',
         'validation',
         'created',
@@ -134,7 +136,7 @@ class VideoAdmin(admin.ModelAdmin):
         return response
     export_csv.short_description = "Export CSV"
 
-    def export_zip(self, request, queryset=Video.objects.filter(validation='C')):
+    def export_zip(self, request, queryset=Video.objects.filter(validation='C', thing__participant__in_study=True)):
         '''
         Return a zip file of videos with catalogue file
         '''
@@ -191,7 +193,8 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
     actions = [export_action_name]
-    list_display = ('id', 'things', 'videos', 'last_upload', 'survey_description')
+    list_display = ('id', 'things', 'videos', 'last_upload', 'survey_description',)
+    list_filter = ('in_study',)
     
     def things(self, obj):
         '''
