@@ -121,8 +121,12 @@ class Participant(EncryptedBlobModel):
         on_delete=models.SET_NULL,
         null=True,
         )
+    in_study = models.BooleanField(
+        default=True,
+        )
     survey_started = models.DateTimeField(
         null=True,
+        blank=True,
         )
     survey_token = models.CharField(
         default=mint_token,
