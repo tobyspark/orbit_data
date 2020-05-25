@@ -13,8 +13,8 @@ from orbit.fields import GenderField
 
 TOKEN_BYTES = 16
 
-STUDY_START = date.fromisoformat('2020-05-04')
-STUDY_END = date.fromisoformat('2020-06-30')
+STUDY_START = date(2020, 5, 4)
+STUDY_END = date(2020, 6, 30)
 
 def mint_token():
     return secrets.token_urlsafe(TOKEN_BYTES)
