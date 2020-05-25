@@ -24,7 +24,7 @@ Funded by Microsoft AI for Accessibility – https://www.microsoft.com/en-us/res
 
 De-activating a User (option in Admin interface) or actually deleting the record has the consequence of barring futher API access with those credentials. This way, a Participant's data can be kept, while locking out their client's access. A Django model, in `orbit.phaseone.models`
 
-`Participant` A study participant, i.e. someone who has given consent and is using a client app to contribute to the dataset. Created with a randomised ID. A `Participant` is optionally linked to a `User`: the two are created together, enabling API access and anonymised record-keeping, but the API access part can be removed. A Django model, in `orbit.phaseone.models`. Export to CSV code in `orbit.phaseone.admin`.
+`Participant` A study participant, i.e. someone who has given consent and is using a client app to contribute to the dataset. Created with a randomised ID. A `Participant` is optionally linked to a `User`: the two are created together, enabling API access and anonymised record-keeping, but the API access part can be removed. Each participant has study start and end dates within which uploads are accepted. These are set as hard-coded defaults, but can be individually tweaked to individually extend (also: development and testing). A Django model, in `orbit.phaseone.models`. Export to CSV code in `orbit.phaseone.admin`.
 
 `Thing` Something that a participant has identified as worthy of inclusion in the dataset. The participant will supply a label for the thing ("what is it?"), and an ORBIT Data user may provide an alternative version suited for the dataset (e.g. anonymised). A Django model, in `orbit.phaseone.models`
 
@@ -73,6 +73,14 @@ Action for selected items: exports a ZIP of selected files, with a JSON catalogu
 ![Admin Video screen](documentation/ORBIT Data - Video screen.png)
 
 ## Version history
+
+v1.1
+
+- As per ORBIT Camera iOS app v1.1
+- Participant model has `in_study` for easily excluding test, abandoned accounts etc.
+- Participant model has `study_start` and `study_end` dates outside of which the `Things` and `Videos` endpoints will not permit access
+- `Participant` endpoint to communicate those dates to the client
+- User records can be deleted while keeping the corresponding participant
 
 v1.0 
 
