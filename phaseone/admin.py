@@ -197,7 +197,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
     actions = [export_action_name]
-    list_display = ('id', 'collection_period', 'things', 'videos', 'last_upload', 'survey_description',)
+    list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
     list_filter = ('in_study', 'collection_period')
     
     def things(self, obj):
@@ -211,6 +211,10 @@ class ParticipantAdmin(admin.ModelAdmin):
         Count of their videos, to display in column
         '''
         return Video.objects.filter(thing__participant=obj).count()
+
+    def consent(self, obj):
+        return obj.user.date_joined.date()
+    consent.admin_order_field = 'user__date_joined'
 
     def last_upload(self, obj):
         '''
