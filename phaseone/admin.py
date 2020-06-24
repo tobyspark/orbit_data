@@ -188,7 +188,7 @@ class VideoAdmin(admin.ModelAdmin):
 
 @admin.register(CollectionPeriod)
 class CollectionPeriodAdmin(admin.ModelAdmin):
-    list_display = ['name', 'start', 'end']
+    list_display = ['__str__', 'start', 'end']
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
