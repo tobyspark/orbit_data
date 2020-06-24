@@ -78,7 +78,7 @@ v1.1
 
 - As per ORBIT Camera iOS app v1.1
 - Participant model has `in_study` for easily excluding test, abandoned accounts etc.
-- Participant model has `study_start` and `study_end` dates outside of which the `Things` and `Videos` endpoints will not permit access
+- Participant model has a named `collection_period` outside of which the `Things` and `Videos` endpoints will not permit access
 - `Participant` endpoint to communicate those dates to the client
 - User records can be deleted while keeping the corresponding participant
 

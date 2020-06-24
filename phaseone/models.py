@@ -13,9 +13,6 @@ from orbit.fields import GenderField
 
 TOKEN_BYTES = 16
 
-STUDY_START = date(2020, 5, 4)
-STUDY_END = date(2020, 6, 30)
-
 def mint_token():
     return secrets.token_urlsafe(TOKEN_BYTES)
 def mint_id():
@@ -95,6 +92,37 @@ class EncryptedBlobModel(models.Model):
         return obj
 
 
+class CollectionPeriod(models.Model):
+    '''
+    A named data collection period.
+    '''
+    name = models.CharField(
+        max_length=20,
+        unique=True,
+        )
+    start = models.DateField(
+        )
+    end = models.DateField(
+        )
+
+    def __str__(self):
+        return self.name
+
+def default_collection_period_pk():
+    '''
+    Default collection period for a Participant. Creates if missing.
+    '''
+    obj, created = CollectionPeriod.objects.get_or_create(
+        pk=1,
+        defaults={
+            'name': 'Default',
+            'start': date.today(),
+            'end': date.today(),
+            }
+        )
+    return obj.pk
+
+
 class ParticipantManager(models.Manager):
     def create_participant(self, user, pii_email, pii_name):
         '''
@@ -137,11 +165,10 @@ class Participant(EncryptedBlobModel):
         max_length=TOKEN_BYTES * 2, # average base64 encoding = 1.3x
         unique=True,
         )
-    study_start = models.DateField(
-        default=STUDY_START,
-        )
-    study_end = models.DateField(
-        default=STUDY_END,
+    collection_period = models.ForeignKey(
+        CollectionPeriod,
+        default=default_collection_period_pk,
+        on_delete=models.SET_DEFAULT, 
         )
     objects = ParticipantManager()
 
@@ -151,7 +178,6 @@ class Participant(EncryptedBlobModel):
         
     def __str__(self):
         return f"P{self.id}"
-
 
 class SurveyManager(models.Manager):
     def create_survey(self, participant, pii_fields):
