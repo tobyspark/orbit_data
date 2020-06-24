@@ -165,7 +165,7 @@ class ParticipantInStudyPeriodPermission(BasePermission):
     """
     def has_permission(self, request, view):
         participant = Participant.objects.get(user=request.user)
-        return participant.study_start <= date.today() <= participant.study_end 
+        return participant.collection_period.start <= date.today() <= participant.collection_period.end 
 
 class ParticipantView(APIView):
     """
@@ -176,7 +176,7 @@ class ParticipantView(APIView):
 
     def get(self, request, format=None):
         participant = Participant.objects.get(user=request.user)
-        serialized = {'study_start': participant.study_start, 'study_end': participant.study_end}
+        serialized = {'study_start': participant.collection_period.start, 'study_end': participant.collection_period.end}
         return Response(serialized)
 
 class ThingViewSet(viewsets.ModelViewSet):

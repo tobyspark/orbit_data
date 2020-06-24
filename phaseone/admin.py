@@ -13,7 +13,7 @@ import os
 import tempfile
 from zipfile import ZipFile
 
-from .models import Thing, Video, Participant, Survey
+from .models import Thing, Video, Participant, Survey, CollectionPeriod
 from .forms import SurveyForm
 from orbit.fields import VideoPreviewWidget
 
@@ -186,6 +186,10 @@ class VideoAdmin(admin.ModelAdmin):
     export_zip.short_description = "Export ZIP"
 
 
+@admin.register(CollectionPeriod)
+class CollectionPeriodAdmin(admin.ModelAdmin):
+    list_display = ['name', 'start', 'end']
+
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     '''
@@ -193,8 +197,8 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
     actions = [export_action_name]
-    list_display = ('id', 'study_start', 'study_end', 'things', 'videos', 'last_upload', 'survey_description',)
-    list_filter = ('in_study',)
+    list_display = ('id', 'collection_period', 'things', 'videos', 'last_upload', 'survey_description',)
+    list_filter = ('in_study', 'collection_period')
     
     def things(self, obj):
         '''
