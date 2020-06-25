@@ -13,8 +13,6 @@ from orbit.fields import GenderField
 
 TOKEN_BYTES = 16
 
-COLLECTION_PERIOD_DEFAULT_PK = 1
-
 def mint_token():
     return secrets.token_urlsafe(TOKEN_BYTES)
 def mint_id():
@@ -109,25 +107,38 @@ class CollectionPeriod(models.Model):
         )
 
     def __str__(self):
-        if self.pk == COLLECTION_PERIOD_DEFAULT_PK:
-            if self.name:
-                return f'{self.name} (default)'
-            return 'Default'
         return self.name
+
+
+class CollectionPeriodDefault(models.Model):
+    '''
+    A chosen collection period. To be a single record to set the CollectionPeriod for new Participants
+    '''
+    period = models.ForeignKey(
+        CollectionPeriod,
+        on_delete = models.PROTECT,
+        )
+
 
 def default_collection_period_pk():
     '''
     Default collection period for a Participant. Creates if missing.
     '''
-    obj, created = CollectionPeriod.objects.get_or_create(
-        pk=COLLECTION_PERIOD_DEFAULT_PK,
-        defaults={
-            'name': '',
-            'start': date.today(),
-            'end': date.today(),
-            }
-        )
-    return obj.pk
+    try:
+        default = CollectionPeriodDefault.objects.get(pk=1)
+    except CollectionPeriodDefault.DoesNotExist:
+        period = CollectionPeriod.objects.first()
+        if period is None:
+            period = CollectionPeriod.objects.create(
+                name='',
+                start=date.today(),
+                end=date.today(),
+                )
+        default = CollectionPeriodDefault.objects.create(
+            pk=1,
+            period=period
+            )
+    return default.period.pk
 
 
 class ParticipantManager(models.Manager):
