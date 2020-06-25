@@ -24,7 +24,7 @@ Funded by Microsoft AI for Accessibility – https://www.microsoft.com/en-us/res
 
 De-activating a User (option in Admin interface) or actually deleting the record has the consequence of barring futher API access with those credentials. This way, a Participant's data can be kept, while locking out their client's access. A Django model, in `orbit.phaseone.models`
 
-`Participant` A study participant, i.e. someone who has given consent and is using a client app to contribute to the dataset. Created with a randomised ID. A `Participant` is optionally linked to a `User`: the two are created together, enabling API access and anonymised record-keeping, but the API access part can be removed. Each participant has study start and end dates within which uploads are accepted. These are set as hard-coded defaults, but can be individually tweaked to individually extend (also: development and testing). A Django model, in `orbit.phaseone.models`. Export to CSV code in `orbit.phaseone.admin`.
+`Participant` A study participant, i.e. someone who has given consent and is using a client app to contribute to the dataset. Created with a randomised ID. A `Participant` is optionally linked to a `User`: the two are created together, enabling API access and anonymised record-keeping, but the API access part can be removed. Each participant is assigned a Collection Period, within which the API will allow their contributions. A Django model, in `orbit.phaseone.models`. Export to CSV code in `orbit.phaseone.admin`.
 
 `Thing` Something that a participant has identified as worthy of inclusion in the dataset. The participant will supply a label for the thing ("what is it?"), and an ORBIT Data user may provide an alternative version suited for the dataset (e.g. anonymised). A Django model, in `orbit.phaseone.models`
 
@@ -50,14 +50,22 @@ On first use, go to `/admin` and log in using the superuser account created on s
 
 Set them as `staff` to be able to access the admin interface, and grant required permissions, e.g. `phaseone | video | can view video`
 
+#### Collection Period screen
+
+Actions for selected item: Make selected period default for new participants 
+
 #### Participant screen
 ![Admin Participant screen](documentation/ORBIT Data - Participant screen.png)
 
-Action for selected items: exports a CSV of Participant data. With PII decryption key supplied, will export PII fields including survey.
-```
-id,name,email,age,gender,vision_light_perception,...
-732709,Toby Test,test@example.com,-,-,-,...
-```
+Actions for selected items:
+
+- export a CSV of Participant data. With PII decryption key supplied, will export PII fields including survey.
+  ```
+  id,name,email,age,gender,vision_light_perception,...
+  732709,Toby Test,test@example.com,-,-,-,...
+  ```
+- change selected participants collection period to _first collection period_
+- change selected participants collection period to _nth collection period_
 
 #### Things screen
 ![Admin Things screen](documentation/ORBIT Data - Things screen.png)
@@ -74,11 +82,16 @@ Action for selected items: exports a ZIP of selected files, with a JSON catalogu
 
 ## Version history
 
+v1.2
+- Named Collection Periods supercede per-Participant 'study_start' and 'study_end' dates.
+- Admin page to manage Collection Periods, including which is the default to be assigned to new Participants
+- Participants admin page can bulk-change Collection Period assignment
+
 v1.1
 
 - As per ORBIT Camera iOS app v1.1
 - Participant model has `in_study` for easily excluding test, abandoned accounts etc.
-- Participant model has a named `collection_period` outside of which the `Things` and `Videos` endpoints will not permit access
+- Participant model has `study_start` and `study_end` dates outside of which the `Things` and `Videos` endpoints will not permit access
 - `Participant` endpoint to communicate those dates to the client
 - User records can be deleted while keeping the corresponding participant
 
