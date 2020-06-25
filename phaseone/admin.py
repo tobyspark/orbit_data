@@ -13,7 +13,7 @@ import os
 import tempfile
 from zipfile import ZipFile
 
-from .models import Thing, Video, Participant, Survey, CollectionPeriod
+from .models import Thing, Video, Participant, Survey, CollectionPeriod, CollectionPeriodDefault, default_collection_period_pk
 from .forms import SurveyForm
 from orbit.fields import VideoPreviewWidget
 
@@ -188,7 +188,32 @@ class VideoAdmin(admin.ModelAdmin):
 
 @admin.register(CollectionPeriod)
 class CollectionPeriodAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'start', 'end']
+    list_display = ('name_with_default', 'start', 'end')    
+    actions = ['set_as_default']
+
+    def name_with_default(self, obj):
+        if obj.pk == default_collection_period_pk():
+            if obj.name:
+                return f'{obj.name} (default)'
+            return 'Default'
+        return obj.name
+
+    def set_as_default(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(request, 'Please select only one collection period', level=messages.WARNING)
+            return
+        CollectionPeriodDefault.objects.filter(pk=1).update(period=queryset.first().pk)
+        self.message_user(request, f"Default set to '{ queryset.first().name }'")
+    set_as_default.short_description = 'Make selected period default for new Participants'
+
+
+def create_participantadmin_action(period):
+    def action_func(modeladmin, request, queryset):
+        rows_updated = queryset.update(collection_period=period)
+        modeladmin.message_user(request, f"{ rows_updated } {'participant was' if rows_updated == 1 else 'participants were'} updated to '{ period }'")
+    action_func.__name__ = f'collection_period_action_{ period.pk }'
+    action_func.short_description = f"Change selected participants collection period to '{ period }'"
+    return action_func
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
@@ -196,10 +221,10 @@ class ParticipantAdmin(admin.ModelAdmin):
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
-    actions = [export_action_name]
+    actions = [export_action_name] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
     list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
     list_filter = ('in_study', 'collection_period')
-    
+
     def things(self, obj):
         '''
         Count of their things, to display in column
