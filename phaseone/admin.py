@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse
+from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
@@ -11,7 +11,7 @@ import csv
 import datetime
 import os
 import tempfile
-from zipfile import ZipFile
+import zipstream
 
 from .models import Thing, Video, Participant, Survey, CollectionPeriod, CollectionPeriodDefault, default_collection_period_pk
 from .forms import SurveyForm
@@ -142,47 +142,39 @@ class VideoAdmin(admin.ModelAdmin):
         '''
         archive_name = f"orbit_ml_dataset_export_{ datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') }"
 
-        # Create a temporary directory, to hold export directory and zip of that directory
-        with tempfile.TemporaryDirectory() as tmpdir:
-            errors = []
-            index_data = {}
+        errors = []
+        index_data = {}
 
-            os.mkdir(os.path.join(tmpdir, archive_name))
+        export_zip = zipstream.ZipFile(allowZip64=True)
+        # Process media objects
+        for item in queryset:
+            filename = f"{ item.thing.participant }--{ slugify(item.thing.label) }--{ item.technique }--{ os.path.basename(item.file.path) }.mp4"
 
-            export_zip_path = os.path.join(tmpdir, f'{ archive_name }.zip')
+            # Add to zip
+            export_zip.write(
+                item.file.path, 
+                arcname=filename
+            )
 
-            with ZipFile(export_zip_path, 'w') as export_zip:
-                # Process media objects
-                for item in queryset:
-                    filename = f"{ item.thing.participant }--{ slugify(item.thing.label) }--{ item.technique }--{ os.path.basename(item.file.path) }.mp4"
+            # Add to index
+            (
+                index_data
+                .setdefault(item.thing.participant.id, {})
+                .setdefault(item.thing.label, {})
+                .setdefault(item.get_technique_display(), [])
+                .append(filename)
+            )
 
-                    # Add to zip
-                    export_zip.write(
-                        item.file.path, 
-                        arcname=filename
-                    )
+        # Add index, as json
+        export_zip.writestr(
+            'orbit_phase_one_dataset.json',
+            json.dumps(index_data).encode(),
+            )
 
-                    # Add to index
-                    (
-                        index_data
-                        .setdefault(item.thing.participant.id, {})
-                        .setdefault(item.thing.label, {})
-                        .setdefault(item.get_technique_display(), [])
-                        .append(filename)
-                    )
-
-                # Add index, as json
-                export_zip.writestr(
-                    'orbit_phase_one_dataset.json',
-                    json.dumps(index_data)
-                    )
-
-            # Return the zip as a download
-            return FileResponse(
-                open(export_zip_path, 'rb'),
-                as_attachment=True,
-                filename=f'{ archive_name }.zip',
-                )
+        # Return the zip as a streaming download
+        response = StreamingHttpResponse(export_zip, content_type='application/zip')
+        response['Content-Disposition'] = f'attachment; filename={archive_name}.zip'
+        return response
     export_zip.short_description = "Export ZIP"
 
 
