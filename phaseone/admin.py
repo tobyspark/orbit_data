@@ -216,6 +216,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     actions = [export_action_name] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
     list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
     list_filter = ('in_study', 'collection_period')
+    readonly_fields = ('id', 'survey_started', )
 
     def things(self, obj):
         '''
