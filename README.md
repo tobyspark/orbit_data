@@ -82,6 +82,9 @@ Action for selected items: exports a ZIP of selected files, with a JSON catalogu
 
 ## Version history
 
+v1.3
+- Export ZIP reworked for production. Does not create temporary file; NGINX, UWSGI settings.
+
 v1.2
 - Named Collection Periods supercede per-Participant 'study_start' and 'study_end' dates.
 - Admin page to manage Collection Periods, including which is the default to be assigned to new Participants
