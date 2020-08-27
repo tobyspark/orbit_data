@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.urls import path, reverse
 from django.db.models import Count, FileField
+from django.db.utils import OperationalError
 from django.utils.text import slugify
 from django.contrib.humanize.templatetags.humanize import naturaltime
 import json
@@ -213,7 +214,10 @@ class ParticipantAdmin(admin.ModelAdmin):
     Provides export actions needed by research team. PII will be included if decryption keys loaded.
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
-    actions = [export_action_name] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
+    try:
+        actions = [export_action_name] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
+    except OperationalError:
+        pass # DB call will block `makemigrations` if table not yet present
     list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
     list_filter = ('in_study', 'collection_period')
     readonly_fields = ('id', 'survey_started', )
