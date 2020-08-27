@@ -20,6 +20,8 @@ Funded by Microsoft AI for Accessibility – https://www.microsoft.com/en-us/res
 
 `phaseone` The models, end points, etc. used to conduct the Phase One study. A Django app, in a folder. A Django app, `orbit/phaseone`
 
+`phasetwo` The models, end points, etc. used to conduct the Phase Two study. A Django app, in a folder. A Django app, `orbit/phasetwo`
+
 `User` Used to regulate API access. A client app can ship with user credentials that the server will authenticate, and from this first contact create a new user to allow and identify further access. A Django model, `django.contrib.auth.models.User`
 
 De-activating a User (option in Admin interface) or actually deleting the record has the consequence of barring futher API access with those credentials. This way, a Participant's data can be kept, while locking out their client's access. A Django model, in `orbit.phaseone.models`
