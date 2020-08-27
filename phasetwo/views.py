@@ -16,6 +16,7 @@ from secrets import token_hex
 from base64 import b64encode
 from datetime import date
 import os
+import hashlib
 
 from .admin import ParticipantAdmin
 from .forms import SurveyForm, DecryptForm
@@ -208,8 +209,19 @@ class VideoViewSet(viewsets.ModelViewSet):
         return Video.objects.filter(thing__participant__user=user).order_by('-created')
 
     def perform_create(self, serializer):
-        serializer.save()
-        # iOS background uploads that compplete when the app is not running do not receive the response body.
+        # The success response of a successful upload may not reach the client, which may try to upload afresh.
+        # We defend against this by comparing with a hash of uploaded files for the same thing (i.e. client)
+        sha256 = hashlib.sha256()
+        for chunk in serializer.validated_data['file'].chunks():
+            sha256.update(chunk)
+        digest = sha256.digest()
+        try:
+            video = Video.objects.get(thing=serializer.validated_data['thing'], sha256=digest)
+            serializer.instance = video
+        except Video.DoesNotExist:
+            serializer.save(sha256=digest)
+
+        # iOS background uploads that complete when the app is not running do not receive the response body.
         # But they do receive the headers. Setting the record ID as a header becomes a fall-back to stop a loop of the upload succeeding but the iOS app not being able to know the ID. And so failing it. And so reuploading.
         # This is particularly pernicious, as it's likely the biggest uploads that will complete without the iOS app running.
         # https://forums.developer.apple.com/thread/84413
