@@ -170,6 +170,7 @@ class Participant(EncryptedBlobModel):
         User,
         on_delete=models.SET_NULL,
         null=True,
+        related_name='phasetwo_participant' # needed as phase one and phase two participants have one-to-one relationship to User
         )
     in_study = models.BooleanField(
         default=True,
