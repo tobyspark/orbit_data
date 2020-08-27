@@ -84,6 +84,10 @@ Action for selected items: exports a ZIP of selected files, with a JSON catalogu
 
 ## Version history
 
+vx.x
+- Phase Two app, routing
+- Video uploads check for previous success. Client sees successful upload. Server does not have duplicated videos. Handles client re-attempting upload when previous success response not received.
+
 v1.3
 - Export ZIP reworked for production. Does not create temporary file; NGINX, UWSGI settings.
 
