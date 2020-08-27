@@ -12,17 +12,20 @@ class ParticipantCreateSerializer(serializers.Serializer):
     auth_credential = serializers.CharField(read_only=True)
 
 class ThingSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    label_validated = serializers.ReadOnlyField()
-        
     class Meta:
         model = Thing
         fields = ['id', 'label_participant', 'label_validated']
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'label_validated': {'read_only': True},
+        }
 
 class VideoSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    validation = serializers.ReadOnlyField()
-    
     class Meta:
         model = Video
         fields = ['id', 'thing', 'file', 'technique', 'validation']
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'validation': {'read_only': True},
+            'file': {'write_only': True},
+        }
