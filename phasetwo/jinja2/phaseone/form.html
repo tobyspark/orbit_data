@@ -1,0 +1,85 @@
+{% extends "phaseone/base.html" %}
+{% block title %}Participant Information{% endblock %}
+{% block sections %}
+    {% block pre_form_sections %}{% endblock %}
+    <form method="post" data-parsley-validate>
+    {{ csrf_input }}
+    {% if form.has_error(NON_FIELD_ERRORS) %}
+    <section>
+        <header><h3>Please correct<span aria-hidden="true"></span></h3></header>
+        <div>
+        {{ form.non_field_errors() }}
+        </div>
+    </section>
+    {% endif %}
+    {% for fieldset in form.fieldsets %}
+    <section>
+        {% if fieldset.legend %}
+        <header><h4>{{ fieldset.legend }}<span aria-hidden="true"></span></h4></header>
+        {% endif %}
+        <div>
+            {% if fieldset.description %}
+            <p class="description">{{ fieldset.description }}</p>
+            {% endif %}
+            <ul>
+            {% for field in fieldset %}
+            {% if field.is_hidden %}
+              {{ field }}
+            {% else %}
+              <li{{ field.row_attrs }}>
+                {% if field.errors %}
+                {{ field.errors }}
+                {% endif %}
+                {{ field | replace("\n", "\n                ") | safe }}
+                {% if field.label %}
+                {{ field.label_tag(label_suffix='') }}
+                {% endif %}
+              </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endfor %}
+    <section>
+        <header><h3>Thanks!<span aria-hidden="true"></span></h3></header>
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </section>
+    </form>
+    <link rel="stylesheet" href="/static/css/parsley.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/guillaumepotier/Parsley.js@2.9.1/dist/parsley.min.js"></script>
+    <script>
+    window.Parsley.options.errorsWrapper = "<ul class=\"parsley-errors-list\" role=\"alert\"></ul>";
+    window.Parsley.options.trigger = 'blur';
+    window.Parsley.on('field:success', function() {
+      // This global callback will be called for any field that fails validation.
+      this.element.removeAttribute('aria-invalid');
+    });
+    window.Parsley.on('field:error', function() {
+      // This global callback will be called for any field that fails validation.
+      this.element.setAttribute('aria-invalid', "true");
+    });
+    window.genderOption.addEventListener("change", function() {
+        // Make the gender "Or, how do you identify" text input required if its radio option is set
+        if (window.genderOtherRadio.checked) {
+            window.genderOtherDescription.setAttribute("required", "");
+            window.genderOtherDescription.setAttribute("placeholder", window.genderOtherDescriptionPlaceholderSelected)
+            window.genderOtherDescription.focus()
+        } else {
+            window.genderOtherDescription.removeAttribute("required")
+            window.genderOtherDescription.setAttribute("placeholder", window.genderOtherDescriptionPlaceholderUnselected)
+            window.genderOtherDescription.value = "";
+        }
+        $(window.genderOtherDescription).parsley().reset();
+    });
+    window.genderOtherDescription.addEventListener("input", function() {
+        // If "Or, how do you identify" text input is being typed into set its radio option
+        if (this.value.length > 0) {
+            window.genderOtherRadio.checked = true;
+        }
+    });
+    </script>
+{% endblock %}
