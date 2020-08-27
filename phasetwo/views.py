@@ -57,16 +57,16 @@ def survey(request, token):
     else:
         form = SurveyForm()
     
-    return render(request, 'phaseone/survey.html', {'form': form})
+    return render(request, 'phasetwo/survey.html', {'form': form})
 
 def survey_done(request):
     """
     The survey done page.
     Static, no further navigation.
     """
-    return render(request, 'phaseone/survey_done.html')
+    return render(request, 'phasetwo/survey_done.html')
 
-@permission_required('phaseone.view_video')
+@permission_required('phasetwo.view_video')
 def video(request, filename):
     """
     Returns the video file. To be used by VideoPreviewWidget in admin's modelform. Requires permission decorator!
@@ -78,7 +78,7 @@ def video(request, filename):
 
     return RangedFileResponse(request, open(videopath, 'rb'), content_type='video/mp4')
 
-@permission_required('phaseone.view_participant')
+@permission_required('phasetwo.view_participant')
 def participant_export(request):
     '''
     Return a CSV file of all participant data suitable for import into Excel.
@@ -96,7 +96,7 @@ def participant_export(request):
                 return pa.export_csv(request, Participant.objects.all(), pem_key)
             except:
                 form.add_error(None, 'There was a problem decrypting the data.')
-    return render(request, 'admin/phaseone/participant_export.html', {
+    return render(request, 'admin/phasetwo/participant_export.html', {
         'form': form,
         'title': 'Participant Export',
         'site_title': 'ORBIT Data',

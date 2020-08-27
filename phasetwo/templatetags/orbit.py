@@ -1,11 +1,11 @@
 from django import template
 from django.urls import reverse
 
-from phaseone.models import Video
+from phasetwo.models import Video
 
 register = template.Library()
 
-@register.inclusion_tag('admin/phaseone/video/submit_line.html', takes_context=True)
+@register.inclusion_tag('admin/phasetwo/video/submit_line.html', takes_context=True)
 def video_submit_row(context):
     """
     Displays the row of buttons for delete and save.
@@ -35,7 +35,7 @@ def video_submit_row(context):
         ctx['original'] = context['original']
         pk = context['original'].pk
         if Video.objects.filter(pk=pk-1).exists(): 
-            ctx['prev_url'] = reverse('admin:phaseone_video_change', args=[pk-1])
+            ctx['prev_url'] = reverse('admin:phasetwo_video_change', args=[pk-1])
         if Video.objects.filter(pk=pk+1).exists():
-            ctx['next_url'] = reverse('admin:phaseone_video_change', args=[pk+1])
+            ctx['next_url'] = reverse('admin:phasetwo_video_change', args=[pk+1])
     return ctx

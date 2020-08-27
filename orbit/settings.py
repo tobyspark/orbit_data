@@ -30,6 +30,7 @@ else:
 INSTALLED_APPS = [
     'pilot.apps.PilotConfig',
     'phaseone.apps.PhaseOneConfig',
+    'phasetwo.apps.PhaseTwoConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
