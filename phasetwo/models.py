@@ -288,6 +288,9 @@ class Video(models.Model):
     file = models.FileField(
         upload_to=random_filename,
         )
+    sha256 = models.BinaryField(
+        max_length=32,
+    )
     technique = models.CharField(
         max_length=1,
         choices=TECHNIQUES,
