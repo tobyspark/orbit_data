@@ -273,6 +273,7 @@ class Video(models.Model):
         ('T', 'Train'),
         ('Z', 'Test: Zoom'),
         ('P', 'Test: Pan'),
+        ('S', 'Test'),
         )
     VALIDATION = (
         ('-', 'Unvalidated'),
