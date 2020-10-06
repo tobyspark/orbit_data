@@ -189,6 +189,10 @@ class Participant(EncryptedBlobModel):
         default=default_collection_period_pk,
         on_delete=models.SET_DEFAULT, 
         )
+    charity_choice = models.CharField(
+        default="",
+        max_length=5,
+    )
     objects = ParticipantManager()
 
     @property

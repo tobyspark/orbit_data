@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework import status
 from ranged_fileresponse import RangedFileResponse
 from secrets import token_hex
 from base64 import b64encode
@@ -21,7 +22,7 @@ import hashlib
 from .admin import ParticipantAdmin
 from .forms import SurveyForm, DecryptForm
 from .models import Participant, Survey, Thing, Video
-from .serializers import ParticipantCreateSerializer, ThingSerializer, VideoSerializer
+from .serializers import ParticipantCreateSerializer, ParticipantSerializer, ThingSerializer, VideoSerializer
 
 def survey(request, token):
     """
@@ -174,6 +175,15 @@ class ParticipantView(APIView):
     i.e. study dates as other API access is locked off outside of these dates
     """
     permission_classes = (IsAuthenticated, ParticipantPermission,)
+    
+    def post(self, request, format=None):
+        participant = Participant.objects.get(user=request.user)
+        
+        serializer = ParticipantSerializer(participant, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
         participant = Participant.objects.get(user=request.user)
