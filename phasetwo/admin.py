@@ -269,6 +269,7 @@ class ParticipantAdmin(admin.ModelAdmin):
 
         return {
             'id': item.id,
+            'charity_choice': item.charity_choice,
             **item.decrypt(private_key_pem=key),
             **survey_pii,
             }
@@ -280,7 +281,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="orbit_participant.csv"'
         
-        participant_headers = ['id', 'name', 'email']
+        participant_headers = ['id', 'name', 'email', 'charity_choice']
         survey_headers = headers_from_form(SurveyForm, first_headers=['id'])
 
         headers = participant_headers + survey_headers[1:]

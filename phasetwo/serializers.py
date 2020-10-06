@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Thing, Video
+from .models import Participant, Thing, Video
 
 class ParticipantCreateSerializer(serializers.Serializer):
     '''
@@ -10,6 +10,12 @@ class ParticipantCreateSerializer(serializers.Serializer):
     name = serializers.CharField(min_length=2, max_length=150, write_only=True)
     email = serializers.EmailField(write_only=True)
     auth_credential = serializers.CharField(read_only=True)
+
+class ParticipantSerializer(serializers.ModelSerializer):
+    # TODO: use serializer for GET study period (already implemented without)
+    class Meta:
+        model = Participant
+        fields = ['charity_choice']
 
 class ThingSerializer(serializers.ModelSerializer):
     class Meta:
