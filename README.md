@@ -90,10 +90,12 @@ Action for selected items: exports a ZIP of selected files, with a JSON catalogu
 
 ## Version history
 
-vx.x
+v2.0
 
 - Phase Two app, routing
 - Video uploads check for previous success. Client sees successful upload. Server does not have duplicated videos. Handles client re-attempting upload when previous success response not received.
+- Video model `technique` gains `Test`.
+- Participant model has `charity_choice`.
 
 v1.3
 
