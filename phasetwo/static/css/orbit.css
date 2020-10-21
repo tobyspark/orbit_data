@@ -1,0 +1,205 @@
+html {
+    font-family: sans-serif;
+    font-size: 1em;
+    line-height: 1.4em;
+}
+
+body {
+    padding-top: 2em;
+}
+
+h1, h2, h3, h4 {
+    font-size: 1em;
+    margin: 1em 0 0.5em 0;
+}
+
+section > div > h2 {
+    font-size: 1.5em;
+}
+
+section > header {
+    font-weight: bold;
+}
+
+section > header > h3, section > header > h4 {
+    margin: 0;
+}
+
+section > header > h4 {
+    font-weight: normal;
+}
+
+p {
+    margin: 0 0 0.5em 0;
+}
+
+p + ul {
+    margin-block-start: 0;
+}
+
+section {
+    display: flex;
+    flex-wrap: wrap
+}
+
+section > header {
+    max-width: 200px;
+    width: 20%;
+    margin-top: 0;
+    padding-right: 2%;
+    text-align: right;
+    margin-bottom: 1em;
+}
+
+section > header > img {
+    padding-left: 1em;
+    padding-top: 0.25em;
+    max-height: 6em;
+}
+
+section > div {
+    width: 64%;
+    min-height: 2em;
+    padding: 0 10% 0 2%;
+    margin-bottom: 1em
+}
+
+section > div > * {
+    width: 100%;
+}
+
+section > div > *:first-child {
+    margin-top: 0;
+}
+
+form {
+    display: inherit;
+    flex-wrap: inherit;
+}
+
+label {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: 90%
+}
+
+input[type="checkbox"] {
+    vertical-align: top; /* Hack alert: should be text-top */
+    position: relative;
+    top: 0.1875em;
+}
+
+input[type="number"] {
+    width: 9em;
+    max-width: 100%;
+}
+
+input[type="text"] {
+    width: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+select,
+textarea {
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+input[type="submit"], a.button {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0.5em 1em;
+    color: white;
+    border: 1px solid #999;  /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+    background-color: black;
+    text-decoration: none;
+    border-radius: 2px;
+    /* Structure */
+    display: inline-block;
+    zoom: 1;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    box-sizing: border-box;
+    width: unset;
+}
+
+input[type="submit"]:active {
+    box-shadow: 0 0 0.2em 0.2em #FFF8 inset, 0 0 0 2em #FFF8 inset;
+    border-color: #000;
+    width:
+}
+
+form ul {
+    list-style-type: none;
+    padding-inline-start: unset;
+    margin-block-start: unset;
+}
+
+form li {
+    margin-bottom: 0.2em;
+}
+
+form ul > li > ul { /* Radio button set */
+    margin-bottom: 1em;
+}
+
+.errorlist {
+    color: red;
+}
+
+@media screen and (max-width: 600px) {
+    section > header, section > div {
+        width: 100%;
+        padding: 0 1em;
+        max-width: none;
+        text-align:left;
+    }
+
+    section > header {
+        margin: 0 0 .5em 0;
+    }
+    
+    section > header span[aria-hidden="true"]::after {
+        content: " —"
+    }
+    
+    section > header > img {
+        padding: unset;
+        margin: 0 50% 1em 0;
+        max-height: unset;
+    }
+
+    section > div {
+        margin-bottom: 2em
+    }
+
+    section > div p, section > div ul {
+        text-align: justify;
+    }
+}
