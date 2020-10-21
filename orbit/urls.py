@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-from phaseone.views import video
+from phasetwo.views import video
 
 urlpatterns = [
     # path('pilot/', include('pilot.urls')), # Pilot now closed
-    path('phaseone/', include('phaseone.urls')),
+    # path('phaseone/', include('phaseone.urls')), # Phase One now closed
+    path('phasetwo/', include('phasetwo.urls')),
     path('admin/', admin.site.urls),
-    path('admin/video/<filename>', video, name='admin_video'),
+    path('admin/video/<filename>', video, name='admin_video'), # FIXME: hardcoded for phasetwo
 ]
