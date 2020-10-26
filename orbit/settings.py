@@ -168,4 +168,5 @@ REST_FRAMEWORK = {
 PUSH_NOTIFICATIONS_SETTINGS = {
         'APNS_CERTIFICATE': os.environ.get('APNS_CERTIFICATE_PATH', None),
         'APNS_TOPIC': 'uk.ac.city.orbit-camera',
+        'UPDATE_ON_DUPLICATE_REG_ID': True, # Ideally, the model constraint would be unique_together reg_id and user?
 }
