@@ -7,6 +7,7 @@ from django.db.models import Count, FileField
 from django.db.utils import OperationalError
 from django.utils.text import slugify
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from push_notifications.models import APNSDevice
 import json
 import csv
 import datetime
@@ -218,7 +219,7 @@ class ParticipantAdmin(admin.ModelAdmin):
         actions = [export_action_name, 'send_notification'] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
     except OperationalError:
         pass # DB call will block `makemigrations` if table not yet present
-    list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
+    list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'push','last_upload', 'survey_description',)
     list_filter = ('in_study', 'collection_period')
     readonly_fields = ('id', 'survey_started', )
 
@@ -248,6 +249,8 @@ class ParticipantAdmin(admin.ModelAdmin):
             return "-"
         return latest.created
 
+    def push(self, obj):
+        return '✓' if APNSDevice.objects.filter(user__phasetwo_participant=obj).exists() else ''
 
     def survey_description(self, obj):
         survey_status = 'Survey complete'
