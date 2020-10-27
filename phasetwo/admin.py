@@ -215,7 +215,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     '''
     export_action_name = 'export_csv_view' if settings.PII_KEY_PRIVATE is None else 'export_csv'
     try:
-        actions = [export_action_name] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
+        actions = [export_action_name, 'send_notification'] + [create_participantadmin_action(x) for x in CollectionPeriod.objects.all()]
     except OperationalError:
         pass # DB call will block `makemigrations` if table not yet present
     list_display = ('id', 'collection_period', 'things', 'videos', 'consent', 'last_upload', 'survey_description',)
@@ -298,4 +298,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     def export_csv_view(self, request, queryset):
         return HttpResponseRedirect(reverse('participant_export'))
     export_csv_view.short_description = "Export CSV (PII decryption key must be supplied)"
-        
+
+    def send_notification(self, request, queryset):
+        selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+        return HttpResponseRedirect(reverse('participant_send_notification', kwargs={"id_list": ",".join(selected)}))        

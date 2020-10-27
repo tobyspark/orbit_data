@@ -15,5 +15,6 @@ urlpatterns = [
     path('api/participant/', views.ParticipantView.as_view()),
     path('api/createparticipant/', views.ParticipantCreateView.as_view()),
     path('participant_export/', views.participant_export, name='participant_export'),
+    path('participant_send_notification/<str:id_list>/', views.participant_send_notification, name='participant_send_notification'),
     path('device/apns/', APNSDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='create_apns_device'),
 ]
