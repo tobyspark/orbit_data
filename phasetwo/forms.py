@@ -15,6 +15,15 @@ class DecryptForm(forms.Form):
         widget=forms.Textarea,
         )
 
+class PushNotificationForm(forms.Form):
+    title = forms.CharField(
+        required=True
+        )
+    body = forms.CharField(
+        required=True,
+        widget=forms.Textarea,
+        )
+
 @parsleyfy
 class SurveyForm(BetterForm):
     '''
