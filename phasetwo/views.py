@@ -106,6 +106,9 @@ def participant_export(request):
         'site_header': 'ORBIT Data'
         })
 
+
+# TODO - Success/failure of send message, as per admin test message in DPN
+
 @permission_required('phasetwo.view_participant')
 def participant_send_notification(request, id_list=""):
     '''
