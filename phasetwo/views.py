@@ -13,6 +13,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework import status
 from ranged_fileresponse import RangedFileResponse
+from push_notifications.models import APNSDevice
 from secrets import token_hex
 from base64 import b64encode
 from datetime import date
@@ -20,7 +21,7 @@ import os
 import hashlib
 
 from .admin import ParticipantAdmin
-from .forms import SurveyForm, DecryptForm
+from .forms import SurveyForm, DecryptForm, PushNotificationForm
 from .models import Participant, Survey, Thing, Video
 from .serializers import ParticipantCreateSerializer, ParticipantSerializer, ThingSerializer, VideoSerializer
 
@@ -103,6 +104,31 @@ def participant_export(request):
         'title': 'Participant Export',
         'site_title': 'ORBIT Data',
         'site_header': 'ORBIT Data'
+        })
+
+
+# TODO - Success/failure of send message, as per admin test message in DPN
+
+@permission_required('phasetwo.view_participant')
+def participant_send_notification(request, id_list=""):
+    '''
+    Send a push notification to the participants. This is an admin action view.
+    '''
+    participant_ids = [int(x) for x in id_list.split(",")]
+    devices = APNSDevice.objects.filter(user__phasetwo_participant__in=participant_ids)
+    
+    form = PushNotificationForm
+    if request.method == 'POST':
+        form = PushNotificationForm(request.POST)
+        if form.is_valid():
+            devices.send_message(message={"title": form.cleaned_data['title'], "body": form.cleaned_data['body']})
+            return HttpResponseRedirect(reverse('admin:phasetwo_participant_changelist'))
+    return render(request, 'admin/phasetwo/participant_send_notification.html', {
+        'form': form,
+        'title': 'Participant Messaging',
+        'site_title': 'ORBIT Data',
+        'site_header': 'ORBIT Data',
+        'device_count': len(devices),
         })
 
 class CanCreateUserPermission(BasePermission):

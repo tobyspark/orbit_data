@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.forms', # For overriding rendering templates
     'form_utils',
     'rest_framework',
+    'push_notifications',
 ]
 
 MIDDLEWARE = [
@@ -162,4 +163,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
+}
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+        'APNS_CERTIFICATE': os.environ.get('APNS_CERTIFICATE_PATH', None),
+        'APNS_TOPIC': 'uk.ac.city.orbit-camera',
+        'UPDATE_ON_DUPLICATE_REG_ID': True, # Ideally, the model constraint would be unique_together reg_id and user?
 }
