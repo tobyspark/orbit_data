@@ -4,12 +4,16 @@ A web-app to collate and administrate the ORBIT dataset. Comprises REST API for 
 
 Built with Python using the Django framework. Provisioning for a CentOS host.
 
-iOS native client: [ORBIT Camera](https://github.com/tobyspark/ORBIT-Camera)
+iOS native client: [ORBIT Camera](https://github.com/orbit-a11y/ORBIT-Camera)
 
 Developed by Toby Harris – https://tobyz.net  
-For ORBIT Project Name – https://orbit.city.ac.uk  
-At ***REMOVED*** – https://hcid.city https://www.city.ac.uk  
+For ORBIT Object Recognition for Blind Image Training – https://orbit.city.ac.uk  
+At City, University of London – https://hcid.city https://www.city.ac.uk  
 Funded by Microsoft AI for Accessibility – https://www.microsoft.com/en-us/research/blog/wheres-my-stuff-developing-ai-with-help-from-people-who-are-blind-or-low-vision-to-meet-their-needs/
+
+## Open-sourcing note
+
+This app was developed in private, and has been subsequently open-sourced as part of the dataset it created. As such, the repository has been cleaned of ORBIT specific content, URLs and so on.
 
 ## Features
 
